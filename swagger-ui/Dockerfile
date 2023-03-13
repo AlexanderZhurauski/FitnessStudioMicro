@@ -1,5 +1,5 @@
 FROM swaggerapi/swagger-ui:latest
-MAINTAINER GreyCompany
+MAINTAINER MyCompany
 
 ADD /product-service/spec/product-service.yml /usr/share/nginx/html/doc/product-service.yaml
 ADD /user-service/spec/user-service.yml /usr/share/nginx/html/doc/user-service.yaml

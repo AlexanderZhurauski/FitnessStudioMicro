@@ -1,13 +1,31 @@
 {
   "Servers": {
     "1": {
-      "Name": "Fitness Studio DB",
+      "Name": "Fitness User DB",
       "Group": "Server Group 1",
       "Port": 5432,
       "Username": "postgres",
-      "Host": "db",
+      "Host": "user-db",
       "SSLMode": "prefer",
-      "MaintenanceDB": "postgres"
+      "MaintenanceDB": "fitness"
+    },
+    "2": {
+      "Name": "Fitness Product DB",
+      "Group": "Server Group 1",
+      "Port": 5432,
+      "Username": "postgres",
+      "Host": "product-db",
+      "SSLMode": "prefer",
+      "MaintenanceDB": "fitness"
+    },
+    "3": {
+      "Name": "Fitness Mail DB",
+      "Group": "Server Group 1",
+      "Port": 5432,
+      "Username": "postgres",
+      "Host": "mail-db",
+      "SSLMode": "prefer",
+      "MaintenanceDB": "fitness"
     }
   }
 }
