@@ -9,9 +9,6 @@ import org.springframework.format.FormatterRegistry;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-
 @Configuration
 public class WebConfigurer implements WebMvcConfigurer {
 
@@ -24,8 +21,4 @@ public class WebConfigurer implements WebMvcConfigurer {
         return new JwtFilter(userService, tokenUtil);
     }
 
-    @Bean
-    public String appAddress() throws UnknownHostException {
-        return InetAddress.getLocalHost().getHostAddress();
-    }
 }

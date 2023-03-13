@@ -1,0 +1,50 @@
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: ${SPRING_DATASOURCE_URL_MAIL}
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
+
+  mail:
+    host: smtp.gmail.com
+    username: ${MAIL_USER}
+    password: ${MAIL_PASSWORD}
+    port: 587
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+        smtps:
+          trust: smtp.gmail.com
+
+
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+org:
+  jobrunr:
+    background-job-server:
+      enabled: true
+    dashboard:
+      enabled: true
+      port: 8000
+    miscellaneous:
+      allow-anonymous-data-usage: false
+    jobs:
+      retry-back-off-time-seed: 1
+    database:
+      table-prefix: app.
+
+mail:
+  confirmation:
+    link: ${MAIL_CONFIRMATION_LINK}
+    subject: Activate your Fitness Studio Account
+    text: "Dear valued user,\n\nThank you for choosing FitnessStudio, your ultimate fitness solution.
+      We appreciate your decision to embark on this journey with us towards a healthier lifestyle.\n\n
+      To proceed with your registration, please verify your email address by clicking on the following link - %s\n\n
+      We look forward to being a part of your fitness journey.\n\nBest regards,\nThe FitnessStudio team"

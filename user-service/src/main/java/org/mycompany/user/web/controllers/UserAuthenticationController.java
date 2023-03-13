@@ -11,6 +11,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeoutException;
+
 @RestController
 @RequestMapping("/api/v1/users")
 public class  UserAuthenticationController {
@@ -35,7 +38,8 @@ public class  UserAuthenticationController {
     }
     @GetMapping("/verification")
     public ResponseEntity<String> verifyCode(@RequestParam String code,
-                                             @RequestParam String mail) {
+                                             @RequestParam String mail)
+            throws ExecutionException, InterruptedException, TimeoutException {
 
         this.userAuthenticationService.verify(code, mail);
         return ResponseEntity.ok().build();
