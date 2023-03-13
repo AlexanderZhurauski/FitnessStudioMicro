@@ -1,0 +1,5 @@
+CREATE TABLE IF NOT EXISTS app.conf_token(
+    EMAIL VARCHAR(100),
+    TOKEN VARCHAR(36),
+    CONSTRAINT pk_conf_token PRIMARY KEY (EMAIL)
+);
