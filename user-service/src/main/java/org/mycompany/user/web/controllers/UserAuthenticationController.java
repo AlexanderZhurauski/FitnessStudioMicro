@@ -1,6 +1,8 @@
 package org.mycompany.user.web.controllers;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import org.mycompany.user.core.dto.user.UserDTO;
 import org.mycompany.user.core.dto.user.UserLoginDTO;
 import org.mycompany.user.core.dto.user.UserRegistrationDTO;
@@ -9,8 +11,10 @@ import org.mycompany.user.service.api.IUserDataService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 
@@ -63,5 +67,10 @@ public class  UserAuthenticationController {
 
         UserDTO userData = this.userAuthenticationService.getMyData();
         return ResponseEntity.ok(userData);
+    }
+
+    @GetMapping("api/v1/users/getInternal")
+    CompletableFuture<UserDetails> loadUserByUsername(@NotNull @NotBlank @RequestParam String username) {
+        return CompletableFuture.completedFuture(this.userAuthenticationService.getInternal(username));
     }
 }

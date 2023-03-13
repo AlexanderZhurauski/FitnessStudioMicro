@@ -94,4 +94,9 @@ public class UserAuthenticationService implements IUserAuthenticationService {
         User user = (User) this.userHolder.getAuthentication().getPrincipal();
         return this.toDTOConverter.convert(user);
     }
+
+    @Override
+    public UserDetails getInternal(String username) {
+        return this.userDetailsService.loadUserByUsername(username);
+    }
 }
