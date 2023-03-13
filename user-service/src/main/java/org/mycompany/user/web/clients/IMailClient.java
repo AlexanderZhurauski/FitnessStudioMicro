@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.concurrent.CompletableFuture;
+
 @FeignClient(name = "mail-service")
 public interface IMailClient {
 
@@ -15,6 +17,6 @@ public interface IMailClient {
     public void sendConfirmationEmail(@Email @NotNull @NotBlank @RequestParam String address);
 
     @GetMapping("/verify")
-    public boolean verifyEmail(@Email @NotNull @NotBlank @RequestParam String mail,
-                               @NotNull @NotBlank @RequestParam String code);
+    public CompletableFuture<Boolean> verifyEmail(@Email @NotNull @NotBlank @RequestParam String mail,
+                                         @NotNull @NotBlank @RequestParam String code);
 }

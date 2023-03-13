@@ -18,6 +18,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
 public class UserAuthenticationService implements IUserAuthenticationService {
 
     private UserDetailsService userDetailsService;
@@ -58,8 +62,10 @@ public class UserAuthenticationService implements IUserAuthenticationService {
     }
 
     @Override
-    public void verify(String code, String mail) {
-        if (!this.mailClient.verifyEmail(mail, code)) {
+    public void verify(String code, String mail)
+            throws ExecutionException, InterruptedException, TimeoutException {
+
+        if (!this.mailClient.verifyEmail(mail, code).get(15, TimeUnit.SECONDS)) {
             throw new BadCredentialsException("The token provided doesn't " +
                     "match the token assigned to email '" + mail + "'");
         }
