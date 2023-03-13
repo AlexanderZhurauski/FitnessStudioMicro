@@ -7,7 +7,7 @@
       "Username": "postgres",
       "Host": "user-db",
       "SSLMode": "prefer",
-      "MaintenanceDB": "fitness"
+      "MaintenanceDB": "user-fitness"
     },
     "2": {
       "Name": "Fitness Product DB",
@@ -16,7 +16,7 @@
       "Username": "postgres",
       "Host": "product-db",
       "SSLMode": "prefer",
-      "MaintenanceDB": "fitness"
+      "MaintenanceDB": "product-fitness"
     },
     "3": {
       "Name": "Fitness Mail DB",
@@ -25,7 +25,7 @@
       "Username": "postgres",
       "Host": "mail-db",
       "SSLMode": "prefer",
-      "MaintenanceDB": "fitness"
+      "MaintenanceDB": "mail-fitness"
     }
   }
 }

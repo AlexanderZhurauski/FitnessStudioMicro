@@ -1,3 +1,5 @@
+CREATE SCHEMA IF NOT EXISTS app;
+
 CREATE TABLE IF NOT EXISTS app.product (
     id UUID,
     creation_time TIMESTAMP(6) WITH TIME ZONE NOT NULL,
