@@ -5,6 +5,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+
 public class UserDetailsDTO implements UserDetails {
     private	String mail;
     private String password;
@@ -12,26 +13,26 @@ public class UserDetailsDTO implements UserDetails {
     private boolean accountNonExpired;
     private boolean credentialsNonExpired;
     private boolean nonLocked;
-    Collection<SimpleGrantedAuthority> authorities;
+    private Collection<SimpleGrantedAuthority> authorityList;
 
     public UserDetailsDTO() {
     }
 
     public UserDetailsDTO(String mail, String password, boolean enabled,
                           boolean accountNonExpired, boolean credentialsNonExpired,
-                          boolean nonLocked, Collection<SimpleGrantedAuthority> authorities) {
+                          boolean nonLocked, Collection<SimpleGrantedAuthority> authorityList) {
         this.mail = mail;
         this.password = password;
         this.enabled = enabled;
         this.accountNonExpired = accountNonExpired;
         this.credentialsNonExpired = credentialsNonExpired;
         this.nonLocked = nonLocked;
-        this.authorities = authorities;
+        this.authorityList = authorityList;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return this.authorities;
+        return this.authorityList;
     }
     @Override
     public String getPassword() {
@@ -59,7 +60,7 @@ public class UserDetailsDTO implements UserDetails {
     }
 
     public String getMail() {
-        return mail;
+        return this.mail;
     }
 
     public void setMail(String mail) {
@@ -83,14 +84,18 @@ public class UserDetailsDTO implements UserDetails {
     }
 
     public boolean isNonLocked() {
-        return nonLocked;
+        return this.nonLocked;
     }
 
     public void setNonLocked(boolean nonLocked) {
         this.nonLocked = nonLocked;
     }
 
-    public void setAuthorities(Collection<? extends GrantedAuthority> authorities) {
-        this.authorities = (Collection<SimpleGrantedAuthority>) authorities;
+    public Collection<SimpleGrantedAuthority> getAuthorityList() {
+        return this.authorityList;
+    }
+
+    public void setAuthorityList(Collection<SimpleGrantedAuthority> authorityList) {
+        this.authorityList = authorityList;
     }
 }

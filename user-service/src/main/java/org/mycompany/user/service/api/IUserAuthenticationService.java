@@ -4,7 +4,6 @@ import org.mycompany.user.core.dto.user.UserDTO;
 import org.mycompany.user.core.dto.user.UserDetailsDTO;
 import org.mycompany.user.core.dto.user.UserLoginDTO;
 import org.mycompany.user.core.dto.user.UserRegistrationDTO;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
