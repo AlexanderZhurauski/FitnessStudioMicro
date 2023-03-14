@@ -9,6 +9,7 @@ services:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB_USER}
+      EUREKA_SERVER_URL: eureka-server
     networks:
       - fitness_ntwrk
 
@@ -20,6 +21,7 @@ services:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB_PRODUCT}
+      EUREKA_SERVER_URL: eureka-server
     networks:
       - fitness_ntwrk
 
@@ -31,6 +33,7 @@ services:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB_MAIL}
+      EUREKA_SERVER_URL: eureka-server
     networks:
       - fitness_ntwrk
 

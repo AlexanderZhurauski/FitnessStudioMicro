@@ -56,7 +56,7 @@
 				</executions>
 				<configuration>
 					<finalName>${project.name}</finalName>
-					<mainClass>org.mycompany.server.EurekaServerApplication</mainClass>
+					<mainClass>com.example.server.EurekaServerApplication</mainClass>
 				</configuration>
 			</plugin>
 		</plugins>

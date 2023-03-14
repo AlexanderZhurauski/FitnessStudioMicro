@@ -10,3 +10,10 @@ spring:
     properties:
       hibernate:
         format_sql: true
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_SERVER_URL}
+    fetch-registry: true
+    register-with-eureka: true
