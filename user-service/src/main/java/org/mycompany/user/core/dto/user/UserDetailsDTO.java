@@ -5,6 +5,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class UserDetailsDTO implements UserDetails {
@@ -14,14 +15,14 @@ public class UserDetailsDTO implements UserDetails {
     private boolean accountNonExpired;
     private boolean credentialsNonExpired;
     private boolean nonLocked;
-    private Collection<String> authorityList;
+    private List<String> authorityList;
 
     public UserDetailsDTO() {
     }
 
     public UserDetailsDTO(String mail, String password, boolean enabled,
                           boolean accountNonExpired, boolean credentialsNonExpired,
-                          boolean nonLocked, Collection<String> authorityList) {
+                          boolean nonLocked, List<String> authorityList) {
         this.mail = mail;
         this.password = password;
         this.enabled = enabled;
@@ -95,11 +96,11 @@ public class UserDetailsDTO implements UserDetails {
         this.nonLocked = nonLocked;
     }
 
-    public Collection<String> getAuthorityList() {
+    public List<String> getAuthorityList() {
         return this.authorityList;
     }
 
-    public void setAuthorityList(Collection<String> authorityList) {
+    public void setAuthorityList(List<String> authorityList) {
         this.authorityList = authorityList;
     }
 }
