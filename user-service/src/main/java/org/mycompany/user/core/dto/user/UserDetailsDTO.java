@@ -5,6 +5,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 public class UserDetailsDTO implements UserDetails {
     private	String mail;
@@ -13,14 +14,14 @@ public class UserDetailsDTO implements UserDetails {
     private boolean accountNonExpired;
     private boolean credentialsNonExpired;
     private boolean nonLocked;
-    private Collection<SimpleGrantedAuthority> authorityList;
+    private Collection<String> authorityList;
 
     public UserDetailsDTO() {
     }
 
     public UserDetailsDTO(String mail, String password, boolean enabled,
                           boolean accountNonExpired, boolean credentialsNonExpired,
-                          boolean nonLocked, Collection<SimpleGrantedAuthority> authorityList) {
+                          boolean nonLocked, Collection<String> authorityList) {
         this.mail = mail;
         this.password = password;
         this.enabled = enabled;
@@ -32,7 +33,10 @@ public class UserDetailsDTO implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return this.authorityList;
+        return this.authorityList
+                .stream()
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList());
     }
     @Override
     public String getPassword() {
@@ -91,11 +95,11 @@ public class UserDetailsDTO implements UserDetails {
         this.nonLocked = nonLocked;
     }
 
-    public Collection<SimpleGrantedAuthority> getAuthorityList() {
+    public Collection<String> getAuthorityList() {
         return this.authorityList;
     }
 
-    public void setAuthorityList(Collection<SimpleGrantedAuthority> authorityList) {
+    public void setAuthorityList(Collection<String> authorityList) {
         this.authorityList = authorityList;
     }
 }
