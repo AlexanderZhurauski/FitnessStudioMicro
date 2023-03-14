@@ -34,7 +34,6 @@ public class ControllerExceptionHandler {
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(List.of(errorResponse));
     }
-
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<List<SingleErrorResponse>> handleHttpMessageNotReadable(
             HttpMessageNotReadableException ex) {

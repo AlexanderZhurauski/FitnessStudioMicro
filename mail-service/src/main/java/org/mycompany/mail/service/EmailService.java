@@ -48,7 +48,7 @@ public class EmailService implements IEmailService {
     }
 
     @Override
-    public boolean verifyEmail(String mail, String code) {
+    public boolean verifyEmail(String code, String mail) {
 
         ConfirmationToken actualToken = this.tokenRepository.findById(mail)
                 .orElseThrow(() -> new EntityNotFoundException(mail, "confirmation token"));

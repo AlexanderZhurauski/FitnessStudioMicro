@@ -9,8 +9,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.concurrent.CompletableFuture;
-
 @RestController
 public class EmailController {
 
@@ -27,9 +25,9 @@ public class EmailController {
     }
 
     @GetMapping("/verify")
-    public CompletableFuture<Boolean> verifyEmail(@Email @NotNull @NotBlank @RequestParam String mail,
-                                                  @NotNull @NotBlank @RequestParam String code) {
+    public boolean verifyEmail(@NotNull @NotBlank @RequestParam String code,
+                                                  @Email @NotNull @NotBlank @RequestParam String mail) {
 
-        return CompletableFuture.completedFuture(this.emailService.verifyEmail(mail, code));
+        return this.emailService.verifyEmail(code, mail);
     }
 }

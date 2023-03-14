@@ -10,8 +10,12 @@ spring:
     properties:
       hibernate:
         format_sql: true
+  application:
+    name: user-service
 
 eureka:
+  instance:
+    prefer-ip-address: true
   client:
     serviceUrl:
       defaultZone: ${EUREKA_SERVER_URL}

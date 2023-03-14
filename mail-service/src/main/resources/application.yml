@@ -1,4 +1,6 @@
 spring:
+  application:
+    name: mail-service
   datasource:
     driver-class-name: org.postgresql.Driver
     url: ${SPRING_DATASOURCE_URL_MAIL}
@@ -27,10 +29,13 @@ spring:
         format_sql: true
 
 eureka:
+  instance:
+    prefer-ip-address: true
   client:
     serviceUrl:
       defaultZone: ${EUREKA_SERVER_URL}
     register-with-eureka: true
+    fetch-registry: true
 
 org:
   jobrunr:

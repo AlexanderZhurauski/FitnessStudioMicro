@@ -2,6 +2,7 @@ package org.mycompany.user.config;
 
 import org.mycompany.user.core.dto.user.UserCreateDTO;
 import org.mycompany.user.core.dto.user.UserDTO;
+import org.mycompany.user.core.dto.user.UserDetailsDTO;
 import org.mycompany.user.core.dto.user.UserRegistrationDTO;
 import org.mycompany.user.dao.entities.*;
 import org.mycompany.user.dao.repositories.*;
@@ -13,6 +14,7 @@ import org.mycompany.user.web.clients.IMailClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -37,11 +39,13 @@ public class ServiceConfig {
                                                                 UserHolder userHolder,
                                                                 Converter<User, UserDTO> toDTOConverter,
                                                                 Converter<UserRegistrationDTO, UserCreateDTO> registrationConverter,
+                                                                Converter<UserDetails, UserDetailsDTO> userDetailsConverter,
                                                                 JwtTokenUtil tokenUtil,
                                                                 PasswordEncoder passwordEncoder) {
 
         return new UserAuthenticationService(userDetailsService, userDataService, mailClient,
-                userHolder, toDTOConverter, registrationConverter, tokenUtil, passwordEncoder);
+                userHolder, toDTOConverter, registrationConverter, userDetailsConverter,
+                tokenUtil, passwordEncoder);
     }
     @Bean
     public UserDetailsService userDetailsService(IUserAuthenticationRepository authenticationRepository) {

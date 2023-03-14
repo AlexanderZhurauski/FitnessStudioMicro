@@ -1,10 +1,7 @@
 package org.mycompany.user.service;
 
 import org.mycompany.user.core.dto.enums.UserStatus;
-import org.mycompany.user.core.dto.user.UserCreateDTO;
-import org.mycompany.user.core.dto.user.UserDTO;
-import org.mycompany.user.core.dto.user.UserLoginDTO;
-import org.mycompany.user.core.dto.user.UserRegistrationDTO;
+import org.mycompany.user.core.dto.user.*;
 import org.mycompany.user.dao.entities.User;
 import org.mycompany.user.security.JwtTokenUtil;
 import org.mycompany.user.security.UserHolder;
@@ -18,10 +15,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
-
 public class UserAuthenticationService implements IUserAuthenticationService {
 
     private UserDetailsService userDetailsService;
@@ -30,6 +23,7 @@ public class UserAuthenticationService implements IUserAuthenticationService {
     private UserHolder userHolder;
     private Converter<User, UserDTO> toDTOConverter;
     private Converter<UserRegistrationDTO, UserCreateDTO> registrationConverter;
+    private Converter<UserDetails, UserDetailsDTO> userDetailsConverter;
     private JwtTokenUtil tokenUtil;
     private PasswordEncoder passwordEncoder;
 
@@ -39,6 +33,7 @@ public class UserAuthenticationService implements IUserAuthenticationService {
                                      UserHolder userHolder,
                                      Converter<User, UserDTO> toDTOConverter,
                                      Converter<UserRegistrationDTO, UserCreateDTO> registrationConverter,
+                                     Converter<UserDetails, UserDetailsDTO> userDetailsConverter,
                                      JwtTokenUtil tokenUtil,
                                      PasswordEncoder passwordEncoder) {
 
@@ -48,6 +43,7 @@ public class UserAuthenticationService implements IUserAuthenticationService {
         this.userHolder = userHolder;
         this.toDTOConverter = toDTOConverter;
         this.registrationConverter = registrationConverter;
+        this.userDetailsConverter = userDetailsConverter;
         this.tokenUtil = tokenUtil;
         this.passwordEncoder = passwordEncoder;
     }
@@ -62,10 +58,9 @@ public class UserAuthenticationService implements IUserAuthenticationService {
     }
 
     @Override
-    public void verify(String code, String mail)
-            throws ExecutionException, InterruptedException, TimeoutException {
+    public void verify(String code, String mail) {
 
-        if (!this.mailClient.verifyEmail(mail, code).get(15, TimeUnit.SECONDS)) {
+        if (!this.mailClient.verifyEmail(code, mail)) {
             throw new BadCredentialsException("The token provided doesn't " +
                     "match the token assigned to email '" + mail + "'");
         }
@@ -96,7 +91,8 @@ public class UserAuthenticationService implements IUserAuthenticationService {
     }
 
     @Override
-    public UserDetails getInternal(String username) {
-        return this.userDetailsService.loadUserByUsername(username);
+    public UserDetailsDTO getInternal(String username) {
+
+        return this.userDetailsConverter.convert(this.userDetailsService.loadUserByUsername(username));
     }
 }

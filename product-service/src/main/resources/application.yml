@@ -10,10 +10,14 @@ spring:
     properties:
       hibernate:
         format_sql: true
+  application:
+    name: product-service
 
 eureka:
+  instance:
+    prefer-ip-address: true
   client:
     serviceUrl:
       defaultZone: ${EUREKA_SERVER_URL}
-    fetch-registry: true
     register-with-eureka: true
+    fetch-registry: true
