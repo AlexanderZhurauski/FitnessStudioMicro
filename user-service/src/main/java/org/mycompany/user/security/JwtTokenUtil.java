@@ -9,8 +9,7 @@ import java.util.concurrent.TimeUnit;
 
 public class JwtTokenUtil {
     private static final String JWT_ISSUER = "MyCompany";
-    @Value("#{environment.JWT_SECRET}")
-    private String JWT_SECRET;
+    private static final String JWT_SECRET = "NDQ1ZjAzNjQtMzViZi00MDRjLTljZjQtNjNjYWIyZTU5ZDYw";
 
     public String generateAccessToken(UserDetails user) {
         return Jwts.builder()

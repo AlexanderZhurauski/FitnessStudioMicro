@@ -1,5 +1,6 @@
 package org.mycompany.product.core.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,7 +15,7 @@ public class UserDetailsDTO implements UserDetails {
     private boolean enabled;
     private boolean accountNonExpired;
     private boolean credentialsNonExpired;
-    private boolean nonLocked;
+    private boolean accountNonLocked;
     private List<String> authorityList;
 
     public UserDetailsDTO() {
@@ -22,16 +23,17 @@ public class UserDetailsDTO implements UserDetails {
 
     public UserDetailsDTO(String mail, String password, boolean enabled,
                           boolean accountNonExpired, boolean credentialsNonExpired,
-                          boolean nonLocked, List<String> authorityList) {
+                          boolean accountNonLocked, List<String> authorityList) {
         this.mail = mail;
         this.password = password;
         this.enabled = enabled;
         this.accountNonExpired = accountNonExpired;
         this.credentialsNonExpired = credentialsNonExpired;
-        this.nonLocked = nonLocked;
+        this.accountNonLocked = accountNonLocked;
         this.authorityList = authorityList;
     }
 
+    @JsonIgnore
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return this.authorityList
@@ -53,7 +55,7 @@ public class UserDetailsDTO implements UserDetails {
     }
     @Override
     public boolean isAccountNonLocked() {
-        return this.nonLocked;
+        return this.accountNonLocked;
     }
     @Override
     public boolean isCredentialsNonExpired() {
@@ -88,12 +90,8 @@ public class UserDetailsDTO implements UserDetails {
         this.credentialsNonExpired = credentialsNonExpired;
     }
 
-    public boolean isNonLocked() {
-        return this.nonLocked;
-    }
-
-    public void setNonLocked(boolean nonLocked) {
-        this.nonLocked = nonLocked;
+    public void setAccountNonLocked(boolean accountNonLocked) {
+        this.accountNonLocked = accountNonLocked;
     }
 
     public List<String> getAuthorityList() {

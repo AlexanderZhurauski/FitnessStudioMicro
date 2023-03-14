@@ -16,7 +16,7 @@ public class UserDetailsToDTO implements Converter<UserDetails, UserDetailsDTO> 
         dto.setMail(source.getUsername());
         dto.setPassword(source.getPassword());
         dto.setEnabled(source.isEnabled());
-        dto.setNonLocked(source.isAccountNonLocked());
+        dto.setAccountNonLocked(source.isAccountNonLocked());
         dto.setAccountNonExpired(source.isAccountNonExpired());
         dto.setCredentialsNonExpired(source.isCredentialsNonExpired());
 
