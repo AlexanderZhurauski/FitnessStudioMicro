@@ -104,8 +104,6 @@ services:
   proxy:
     build: proxy
     image: fitness_proxy:1.0.0
-    environment:
-      NETWORK_URL: fitness_ntwrk
     ports:
       - "80:80"
     networks:
