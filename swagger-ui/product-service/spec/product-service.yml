@@ -28,7 +28,7 @@ paths:
         - "Рацион"
       summary: Добавление нового продукта
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: [ROLE_ADMIN]
       requestBody:
         $ref: "#/components/requestBodies/CreateProduct"
       responses:
@@ -51,12 +51,16 @@ paths:
           name: page
           schema:
             type: integer
+            minimum: 0
+            default: 0
           description: Номер страницы
           required: false
         - in: query
           name: size
           schema:
             type: integer
+            minimum: 1
+            default: 20
           description: Размер страницы
           required: false
       responses:
@@ -80,7 +84,7 @@ paths:
         - "Рацион"
       summary: Редактировать информацию о продукте
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: [ROLE_ADMIN]
       parameters:
         - in: path
           name: uuid
@@ -115,7 +119,7 @@ paths:
         - "Рацион"
       summary: Добавление нового рецепта
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: [ROLE_ADMIN]
       requestBody:
         $ref: "#/components/requestBodies/CreateRecipe"
       responses:
@@ -133,19 +137,21 @@ paths:
       tags:
         - "Рацион"
       summary: Получить страницу рецептов
-      security:
-        - bearerAuth: []
       parameters:
         - in: query
           name: page
           schema:
             type: integer
+            minimum: 0
+            default: 0
           description: Номер страницы
           required: false
         - in: query
           name: size
           schema:
             type: integer
+            minimum: 1
+            default: 20
           description: Размер страницы
           required: false
       responses:
@@ -169,7 +175,7 @@ paths:
         - "Рацион"
       summary: Редактировать информацию о рецепте
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: [ROLE_ADMIN]
       parameters:
         - in: path
           name: uuid
