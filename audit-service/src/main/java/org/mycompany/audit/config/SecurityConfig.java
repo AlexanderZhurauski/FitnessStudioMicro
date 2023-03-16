@@ -1,8 +1,8 @@
-package org.mycompany.product.config;
+package org.mycompany.audit.config;
 
 import jakarta.servlet.http.HttpServletResponse;
-import org.mycompany.product.security.JwtTokenUtil;
-import org.mycompany.product.security.filters.JwtFilter;
+import org.mycompany.audit.security.JwtTokenUtil;
+import org.mycompany.audit.security.filters.JwtFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -53,10 +53,15 @@ public class SecurityConfig {
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.POST, "/api/v1/audit/postInternal").access(new WebExpressionAuthorizationManager(
-                                "hasIpAddress('product-service') or hasIpAddress('user-service')"
+                        .requestMatchers(HttpMethod.GET, "/api/v1/users/verification").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/v1/users/registration").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/v1/users/login").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/users/getInternal").access(new WebExpressionAuthorizationManager(
+                                "hasIpAddress('product-service')"
                         ))
-                        .anyRequest().hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/v1/users/me").authenticated()
+                        .requestMatchers("/api/v1/users/**").hasRole("ADMIN")
+                        .anyRequest().authenticated()
                 );
 
         return http.build();
