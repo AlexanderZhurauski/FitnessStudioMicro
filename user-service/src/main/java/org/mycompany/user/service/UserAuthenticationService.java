@@ -92,7 +92,6 @@ public class UserAuthenticationService implements IUserAuthenticationService {
 
     @Override
     public UserDetailsDTO getInternal(String username) {
-
         return this.userDetailsConverter.convert(this.userDetailsService.loadUserByUsername(username));
     }
 }
