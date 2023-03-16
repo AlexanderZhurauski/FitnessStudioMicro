@@ -3,7 +3,7 @@ package org.mycompany.user.service;
 import org.mycompany.user.core.dto.enums.UserStatus;
 import org.mycompany.user.core.dto.user.*;
 import org.mycompany.user.dao.entities.User;
-import org.mycompany.user.security.JwtTokenUtil;
+import org.mycompany.user.security.JwtTokenHandler;
 import org.mycompany.user.security.UserHolder;
 import org.mycompany.user.service.api.IUserAuthenticationService;
 import org.mycompany.user.service.api.IUserDataService;
@@ -24,7 +24,7 @@ public class UserAuthenticationService implements IUserAuthenticationService {
     private Converter<User, UserDTO> toDTOConverter;
     private Converter<UserRegistrationDTO, UserCreateDTO> registrationConverter;
     private Converter<UserDetails, UserDetailsDTO> userDetailsConverter;
-    private JwtTokenUtil tokenUtil;
+    private JwtTokenHandler tokenUtil;
     private PasswordEncoder passwordEncoder;
 
     public UserAuthenticationService(UserDetailsService userDetailsService,
@@ -34,7 +34,7 @@ public class UserAuthenticationService implements IUserAuthenticationService {
                                      Converter<User, UserDTO> toDTOConverter,
                                      Converter<UserRegistrationDTO, UserCreateDTO> registrationConverter,
                                      Converter<UserDetails, UserDetailsDTO> userDetailsConverter,
-                                     JwtTokenUtil tokenUtil,
+                                     JwtTokenHandler tokenUtil,
                                      PasswordEncoder passwordEncoder) {
 
         this.userDetailsService = userDetailsService;

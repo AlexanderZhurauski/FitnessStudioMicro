@@ -64,6 +64,7 @@ public class ProductService implements IProductService {
         product.setProteins(productCreateDTO.getProteins());
         product.setCalories(productCreateDTO.getCalories());
         product.setWeight(productCreateDTO.getWeight());
+
         this.productRepository.save(product);
     }
 }

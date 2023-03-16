@@ -1,7 +1,8 @@
 package org.mycompany.user.config;
 
 import jakarta.servlet.http.HttpServletResponse;
-import org.mycompany.user.security.JwtTokenUtil;
+import org.mycompany.user.security.JWTProperty;
+import org.mycompany.user.security.JwtTokenHandler;
 import org.mycompany.user.security.filters.JwtFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,6 +22,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http,
                                            JwtFilter jwtFilter) throws Exception {
+
         http = http.cors().and().csrf().disable();
 
         http = http
@@ -32,20 +34,14 @@ public class SecurityConfig {
         http = http
                 .exceptionHandling()
                 .authenticationEntryPoint(
-                        (request, response, ex) -> {
-                            response.sendError(
-                                    HttpServletResponse.SC_UNAUTHORIZED,
-                                    ex.getMessage()
-                            );
-                        }
+                        (request, response, ex) -> response.setStatus(
+                                HttpServletResponse.SC_UNAUTHORIZED
+                        )
                 )
                 .accessDeniedHandler(
-                        (request, response, ex) -> {
-                            response.sendError(
-                                    HttpServletResponse.SC_FORBIDDEN,
-                                    ex.getMessage()
-                            );
-                        }
+                        (request, response, ex) -> response.setStatus(
+                                HttpServletResponse.SC_FORBIDDEN
+                        )
                 )
                 .and();
 
@@ -73,8 +69,8 @@ public class SecurityConfig {
     }
 
     @Bean
-    public JwtTokenUtil jwtTokenUtil() {
+    public JwtTokenHandler jwtTokenUtil(JWTProperty jwtProperty) {
 
-        return new JwtTokenUtil();
+        return new JwtTokenHandler(jwtProperty);
     }
 }

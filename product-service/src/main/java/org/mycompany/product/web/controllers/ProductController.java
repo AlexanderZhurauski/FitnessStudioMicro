@@ -30,14 +30,14 @@ public class ProductController {
     }
 
     @GetMapping
-    public Page<ProductDTO> getUserPage(Pageable pageable) {
+    public Page<ProductDTO> getProductPage(Pageable pageable) {
         return this.productService.getPage(pageable);
     }
 
     @PutMapping("/{uuid}/dt_update/{lastUpdated}")
-    public ResponseEntity<String> updateUser(@PathVariable UUID uuid,
-                                              @PathVariable Instant lastUpdated,
-                                              @RequestBody ProductCreateDTO product) {
+    public ResponseEntity<String> updateProduct(@PathVariable UUID uuid,
+                                                @PathVariable Instant lastUpdated,
+                                                @RequestBody ProductCreateDTO product) {
         this.productService.update(uuid, lastUpdated, product);
         return ResponseEntity.ok()
                 .build();

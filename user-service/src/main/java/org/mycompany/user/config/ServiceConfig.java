@@ -6,7 +6,7 @@ import org.mycompany.user.core.dto.user.UserDetailsDTO;
 import org.mycompany.user.core.dto.user.UserRegistrationDTO;
 import org.mycompany.user.dao.entities.*;
 import org.mycompany.user.dao.repositories.*;
-import org.mycompany.user.security.JwtTokenUtil;
+import org.mycompany.user.security.JwtTokenHandler;
 import org.mycompany.user.security.UserHolder;
 import org.mycompany.user.service.*;
 import org.mycompany.user.service.api.*;
@@ -40,7 +40,7 @@ public class ServiceConfig {
                                                                 Converter<User, UserDTO> toDTOConverter,
                                                                 Converter<UserRegistrationDTO, UserCreateDTO> registrationConverter,
                                                                 Converter<UserDetails, UserDetailsDTO> userDetailsConverter,
-                                                                JwtTokenUtil tokenUtil,
+                                                                JwtTokenHandler tokenUtil,
                                                                 PasswordEncoder passwordEncoder) {
 
         return new UserAuthenticationService(userDetailsService, userDataService, mailClient,

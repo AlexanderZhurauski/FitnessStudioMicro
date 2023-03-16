@@ -23,21 +23,21 @@ public class RecipeController {
     }
 
     @PostMapping
-    public ResponseEntity<String> createProduct(@RequestBody RecipeCreateDTO recipe) {
+    public ResponseEntity<String> createRecipe(@RequestBody RecipeCreateDTO recipe) {
         this.recipeService.create(recipe);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .build();
     }
 
     @GetMapping
-    public Page<RecipeDTO> getUserPage(Pageable pageable) {
+    public Page<RecipeDTO> getRecipePage(Pageable pageable) {
         return this.recipeService.getPage(pageable);
     }
 
     @PutMapping("/{uuid}/dt_update/{lastUpdated}")
-    public ResponseEntity<String> updateUser(@PathVariable UUID uuid,
-                                                 @PathVariable Instant lastUpdated,
-                                                 @RequestBody RecipeCreateDTO product) {
+    public ResponseEntity<String> updateRecipe(@PathVariable UUID uuid,
+                                               @PathVariable Instant lastUpdated,
+                                               @RequestBody RecipeCreateDTO product) {
 
         this.recipeService.update(uuid, lastUpdated, product);
         return ResponseEntity

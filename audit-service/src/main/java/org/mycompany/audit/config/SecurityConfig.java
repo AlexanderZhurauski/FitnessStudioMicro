@@ -12,6 +12,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.expression.WebExpressionAuthorizationManager;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
@@ -32,18 +33,14 @@ public class SecurityConfig {
         http = http
                 .exceptionHandling()
                 .authenticationEntryPoint(
-                        (request, response, ex) -> {
-                            response.setStatus(
-                                    HttpServletResponse.SC_UNAUTHORIZED
-                            );
-                        }
+                        (request, response, ex) -> response.setStatus(
+                                HttpServletResponse.SC_UNAUTHORIZED
+                        )
                 )
                 .accessDeniedHandler(
-                        (request, response, ex) -> {
-                            response.setStatus(
-                                    HttpServletResponse.SC_FORBIDDEN
-                            );
-                        }
+                        (request, response, ex) -> response.setStatus(
+                                HttpServletResponse.SC_FORBIDDEN
+                        )
                 )
                 .and();
 
@@ -51,14 +48,10 @@ public class SecurityConfig {
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.POST, "/api/v1/audit").permitAll()
-                        /*.access(new WebExpressionAuthorizationManager(
+                        .requestMatchers(HttpMethod.POST, "/api/v1/audit").access(new WebExpressionAuthorizationManager(
                                 "hasIpAddress('product-service') or hasIpAddress('user-service')"
                         ))
-
-                         */
-                                .anyRequest().permitAll()
-                        //.anyRequest().hasRole("ADMIN")
+                        .anyRequest().hasRole("ADMIN")
                 );
 
         return http.build();
