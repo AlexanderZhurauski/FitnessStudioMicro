@@ -1,6 +1,8 @@
 package org.mycompany.product.service;
 
 import jakarta.persistence.OptimisticLockException;
+import org.mycompany.product.audit.annotations.Audited;
+import org.mycompany.product.audit.enums.OperationType;
 import org.mycompany.product.core.dto.product.ProductCreateDTO;
 import org.mycompany.product.core.dto.product.ProductDTO;
 import org.mycompany.product.core.exceptions.custom.EntityNotFoundException;
@@ -29,6 +31,7 @@ public class ProductService implements IProductService {
     }
 
     @Override
+    @Audited(type = OperationType.CREATE)
     public void create(ProductCreateDTO productCreateDTO) {
         Product product = toEntityConverter.convert(productCreateDTO);
         this.productRepository.save(product);
@@ -47,6 +50,7 @@ public class ProductService implements IProductService {
     }
 
     @Override
+    @Audited(type = OperationType.UPDATE)
     public void update(UUID uuid, Instant lastUpdated,
                              ProductCreateDTO productCreateDTO) {
 

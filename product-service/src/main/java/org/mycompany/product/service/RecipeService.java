@@ -1,6 +1,8 @@
 package org.mycompany.product.service;
 
 import jakarta.persistence.OptimisticLockException;
+import org.mycompany.product.audit.annotations.Audited;
+import org.mycompany.product.audit.enums.OperationType;
 import org.mycompany.product.core.dto.recipe.RecipeCompositionCreateDTO;
 import org.mycompany.product.core.dto.recipe.RecipeCreateDTO;
 import org.mycompany.product.core.dto.recipe.RecipeDTO;
@@ -35,6 +37,7 @@ public class RecipeService implements IRecipeService {
     }
 
     @Override
+    @Audited(type = OperationType.CREATE)
     public void create(RecipeCreateDTO recipeCreateDTO) {
         Recipe recipe = convertToEntity(recipeCreateDTO);
         this.recipeRepository.save(recipe);
@@ -47,6 +50,7 @@ public class RecipeService implements IRecipeService {
     }
 
     @Override
+    @Audited(type = OperationType.UPDATE)
     public void update(UUID uuid, Instant lastUpdated, RecipeCreateDTO recipeCreateDTO) {
         Recipe recipe = this.recipeRepository.findById(uuid)
                 .orElseThrow(() -> new EntityNotFoundException(uuid, "recipe"));
