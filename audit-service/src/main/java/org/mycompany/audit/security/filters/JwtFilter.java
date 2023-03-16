@@ -4,7 +4,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.mycompany.audit.security.JwtTokenUtil;
+import org.mycompany.audit.security.JwtTokenHandler;
 import org.mycompany.audit.web.clients.IUserClient;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -21,10 +21,10 @@ import static org.apache.logging.log4j.util.Strings.isEmpty;
 public class JwtFilter extends OncePerRequestFilter {
 
     private IUserClient userClient;
-    private JwtTokenUtil tokenUtil;
+    private JwtTokenHandler tokenUtil;
 
     public JwtFilter(IUserClient userClient,
-                     JwtTokenUtil tokenUtil) {
+                     JwtTokenHandler tokenUtil) {
         this.userClient = userClient;
         this.tokenUtil = tokenUtil;
     }

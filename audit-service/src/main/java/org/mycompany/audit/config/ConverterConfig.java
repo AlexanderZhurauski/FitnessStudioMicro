@@ -17,7 +17,7 @@ public class ConverterConfig {
     }
 
     @Bean
-    public Converter<AuditDTO, AuditEntity> toEnityConverter() {
+    public Converter<AuditDTO, AuditEntity> toEntityConverter() {
         return new AuditToEntityConverter();
     }
 }

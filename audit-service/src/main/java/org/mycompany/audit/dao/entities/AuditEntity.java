@@ -1,6 +1,9 @@
 package org.mycompany.audit.dao.entities;
 
 import jakarta.persistence.*;
+import org.mycompany.audit.core.dto.enums.EntityType;
+import org.mycompany.audit.core.dto.enums.UserRole;
+
 import java.time.Instant;
 import java.util.UUID;
 @Entity
@@ -11,24 +14,31 @@ public class AuditEntity {
     private UUID uuid;
     @Column(name = "creation_time")
     private Instant creationTime;
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    private AuditUserEntity user;
+    @Column(name = "user_id")
+    private UUID userUUID;
+    private String mail;
+    @Column(name = "full_name")
+    private String fio;
+    @Enumerated(EnumType.STRING)
+    private UserRole role;
     private String text;
     @Enumerated(EnumType.STRING)
-    @ManyToOne
-    private Type type;
+    private EntityType type;
     @Column(name = "entity_id")
     private String id;
 
     public AuditEntity() {
     }
 
-    public AuditEntity(UUID uuid, Instant creationTime,
-                       AuditUserEntity user, String text,
-                       Type type, String id) {
+    public AuditEntity(UUID uuid, Instant creationTime, UUID userUUID,
+                       String mail, String fio, UserRole role,
+                       String text, EntityType type, String id) {
         this.uuid = uuid;
         this.creationTime = creationTime;
-        this.user = user;
+        this.userUUID = userUUID;
+        this.mail = mail;
+        this.fio = fio;
+        this.role = role;
         this.text = text;
         this.type = type;
         this.id = id;
@@ -50,12 +60,36 @@ public class AuditEntity {
         this.creationTime = creationTime;
     }
 
-    public AuditUserEntity getUser() {
-        return this.user;
+    public UUID getUserUUID() {
+        return this.userUUID;
     }
 
-    public void setUser(AuditUserEntity user) {
-        this.user = user;
+    public void setUserUUID(UUID userUUID) {
+        this.userUUID = userUUID;
+    }
+
+    public String getMail() {
+        return this.mail;
+    }
+
+    public void setMail(String mail) {
+        this.mail = mail;
+    }
+
+    public String getFio() {
+        return this.fio;
+    }
+
+    public void setFio(String fio) {
+        this.fio = fio;
+    }
+
+    public UserRole getRole() {
+        return this.role;
+    }
+
+    public void setRole(UserRole role) {
+        this.role = role;
     }
 
     public String getText() {
@@ -66,11 +100,11 @@ public class AuditEntity {
         this.text = text;
     }
 
-    public Type getType() {
+    public EntityType getType() {
         return this.type;
     }
 
-    public void setType(Type type) {
+    public void setType(EntityType type) {
         this.type = type;
     }
 

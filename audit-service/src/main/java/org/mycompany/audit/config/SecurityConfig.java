@@ -1,7 +1,8 @@
 package org.mycompany.audit.config;
 
 import jakarta.servlet.http.HttpServletResponse;
-import org.mycompany.audit.security.JwtTokenUtil;
+import org.mycompany.audit.security.JWTProperty;
+import org.mycompany.audit.security.JwtTokenHandler;
 import org.mycompany.audit.security.filters.JwtFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,7 +12,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.access.expression.WebExpressionAuthorizationManager;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
@@ -33,17 +33,15 @@ public class SecurityConfig {
                 .exceptionHandling()
                 .authenticationEntryPoint(
                         (request, response, ex) -> {
-                            response.sendError(
-                                    HttpServletResponse.SC_UNAUTHORIZED,
-                                    ex.getMessage()
+                            response.setStatus(
+                                    HttpServletResponse.SC_UNAUTHORIZED
                             );
                         }
                 )
                 .accessDeniedHandler(
                         (request, response, ex) -> {
-                            response.sendError(
-                                    HttpServletResponse.SC_FORBIDDEN,
-                                    ex.getMessage()
+                            response.setStatus(
+                                    HttpServletResponse.SC_FORBIDDEN
                             );
                         }
                 )
@@ -53,15 +51,14 @@ public class SecurityConfig {
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.GET, "/api/v1/users/verification").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/v1/users/registration").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/v1/users/login").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/v1/users/getInternal").access(new WebExpressionAuthorizationManager(
-                                "hasIpAddress('product-service')"
+                        .requestMatchers(HttpMethod.POST, "/api/v1/audit").permitAll()
+                        /*.access(new WebExpressionAuthorizationManager(
+                                "hasIpAddress('product-service') or hasIpAddress('user-service')"
                         ))
-                        .requestMatchers(HttpMethod.GET, "/api/v1/users/me").authenticated()
-                        .requestMatchers("/api/v1/users/**").hasRole("ADMIN")
-                        .anyRequest().authenticated()
+
+                         */
+                                .anyRequest().permitAll()
+                        //.anyRequest().hasRole("ADMIN")
                 );
 
         return http.build();
@@ -73,8 +70,8 @@ public class SecurityConfig {
     }
 
     @Bean
-    public JwtTokenUtil jwtTokenUtil() {
+    public JwtTokenHandler jwtTokenHandler(JWTProperty jwtProperty) {
 
-        return new JwtTokenUtil();
+        return new JwtTokenHandler(jwtProperty);
     }
 }
