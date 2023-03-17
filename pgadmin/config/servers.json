@@ -26,6 +26,15 @@
       "Host": "mail-db",
       "SSLMode": "prefer",
       "MaintenanceDB": "mail-fitness"
+    },
+    "4": {
+      "Name": "Fitness Audit DB",
+      "Group": "Server Group 1",
+      "Port": 5432,
+      "Username": "postgres",
+      "Host": "audit-db",
+      "SSLMode": "prefer",
+      "MaintenanceDB": "audit"
     }
   }
 }

@@ -11,5 +11,5 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 public @interface Audited {
 
-    public OperationType type();
+    OperationType type();
 }
