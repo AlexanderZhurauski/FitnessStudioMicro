@@ -1,20 +1,21 @@
 package org.mycompany.user.config;
 
+import org.mycompany.user.audit.advice.AuditAspect;
 import org.mycompany.user.core.dto.user.UserCreateDTO;
 import org.mycompany.user.core.dto.user.UserDTO;
-import org.mycompany.user.core.dto.user.UserDetailsDTO;
 import org.mycompany.user.core.dto.user.UserRegistrationDTO;
 import org.mycompany.user.dao.entities.*;
 import org.mycompany.user.dao.repositories.*;
 import org.mycompany.user.security.JwtTokenHandler;
 import org.mycompany.user.security.UserHolder;
+import org.mycompany.user.security.api.IExtendedUserDetails;
 import org.mycompany.user.service.*;
 import org.mycompany.user.service.api.*;
+import org.mycompany.user.web.clients.IAuditClient;
 import org.mycompany.user.web.clients.IMailClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -37,20 +38,26 @@ public class ServiceConfig {
                                                                 IUserDataService userDataService,
                                                                 IMailClient mailClient,
                                                                 UserHolder userHolder,
-                                                                Converter<User, UserDTO> toDTOConverter,
                                                                 Converter<UserRegistrationDTO, UserCreateDTO> registrationConverter,
-                                                                Converter<UserDetails, UserDetailsDTO> userDetailsConverter,
-                                                                JwtTokenHandler tokenUtil,
+                                                                JwtTokenHandler tokenHandler,
                                                                 PasswordEncoder passwordEncoder) {
 
         return new UserAuthenticationService(userDetailsService, userDataService, mailClient,
-                userHolder, toDTOConverter, registrationConverter, userDetailsConverter,
-                tokenUtil, passwordEncoder);
+                userHolder, registrationConverter, tokenHandler, passwordEncoder);
     }
     @Bean
-    public UserDetailsService userDetailsService(IUserAuthenticationRepository authenticationRepository) {
-        return username -> authenticationRepository.findUserByMail(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User with email '"
-                        + username + "' has not been found!"));
+    public UserDetailsService userDetailsService(IUserAuthenticationRepository authenticationRepository,
+                                                 Converter<User, IExtendedUserDetails> userDetailsConverter) {
+        return (username) -> {
+            User userDetails = authenticationRepository.findUserByMail(username)
+                    .orElseThrow(() -> new UsernameNotFoundException("User with email '"
+                            + username + "' has not been found!"));
+            return userDetailsConverter.convert(userDetails);
+        };
+    }
+
+    @Bean
+    public AuditAspect auditAspect(IAuditClient auditClient, UserHolder userHolder) {
+        return new AuditAspect(auditClient, userHolder);
     }
 }

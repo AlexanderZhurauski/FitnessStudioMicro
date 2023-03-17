@@ -1,17 +1,24 @@
-package org.mycompany.product.core.dto;
+package org.mycompany.product.core.dto.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.mycompany.product.core.dto.enums.UserRole;
+import org.mycompany.product.core.dto.enums.UserStatus;
+import org.mycompany.product.security.api.IExtendedUserDetails;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
-public class UserDetailsDTO implements UserDetails {
+public class UserDetailsDTO implements IExtendedUserDetails {
+    private UUID userId;
     private	String mail;
+    private String fullName;
     private String password;
+    private UserStatus status;
+    private UserRole role;
     private boolean enabled;
     private boolean accountNonExpired;
     private boolean credentialsNonExpired;
@@ -21,10 +28,13 @@ public class UserDetailsDTO implements UserDetails {
     public UserDetailsDTO() {
     }
 
-    public UserDetailsDTO(String mail, String password, boolean enabled,
-                          boolean accountNonExpired, boolean credentialsNonExpired,
-                          boolean accountNonLocked, List<String> authorityList) {
+    public UserDetailsDTO(UUID userId, String mail, String fullName, String password,
+                          boolean enabled, boolean accountNonExpired,
+                          boolean credentialsNonExpired, boolean accountNonLocked,
+                          List<String> authorityList) {
+        this.userId = userId;
         this.mail = mail;
+        this.fullName = fullName;
         this.password = password;
         this.enabled = enabled;
         this.accountNonExpired = accountNonExpired;
@@ -65,6 +75,14 @@ public class UserDetailsDTO implements UserDetails {
     public boolean isEnabled() {
         return this.enabled;
     }
+    @Override
+    public String getUserID() {
+        return this.userId.toString();
+    }
+
+    public void setUserID (UUID userId) {
+        this.userId = userId;
+    }
 
     public String getMail() {
         return this.mail;
@@ -72,6 +90,14 @@ public class UserDetailsDTO implements UserDetails {
 
     public void setMail(String mail) {
         this.mail = mail;
+    }
+
+    public String getFullName() {
+        return this.fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 
     public void setPassword(String password) {
@@ -100,5 +126,21 @@ public class UserDetailsDTO implements UserDetails {
 
     public void setAuthorityList(List<String> authorityList) {
         this.authorityList = authorityList;
+    }
+
+    public UserStatus getStatus() {
+        return this.status;
+    }
+
+    public void setStatus(UserStatus status) {
+        this.status = status;
+    }
+
+    public UserRole getRole() {
+        return this.role;
+    }
+
+    public void setRole(UserRole role) {
+        this.role = role;
     }
 }

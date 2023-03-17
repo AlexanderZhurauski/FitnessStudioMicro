@@ -1,6 +1,9 @@
 package org.mycompany.product.service;
 
 import jakarta.persistence.OptimisticLockException;
+import org.mycompany.product.audit.annotations.Audited;
+import org.mycompany.product.audit.enums.EntityType;
+import org.mycompany.product.audit.enums.OperationType;
 import org.mycompany.product.core.dto.product.ProductCreateDTO;
 import org.mycompany.product.core.dto.product.ProductDTO;
 import org.mycompany.product.core.exceptions.custom.EntityNotFoundException;
@@ -29,9 +32,10 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public void create(ProductCreateDTO productCreateDTO) {
+    @Audited(operationType = OperationType.CREATE, entityType = EntityType.PRODUCT)
+    public UUID create(ProductCreateDTO productCreateDTO) {
         Product product = toEntityConverter.convert(productCreateDTO);
-        this.productRepository.save(product);
+        return  this.productRepository.save(product).getUuid();
     }
 
     @Override
@@ -47,7 +51,8 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public void update(UUID uuid, Instant lastUpdated,
+    @Audited(operationType = OperationType.UPDATE, entityType = EntityType.PRODUCT)
+    public UUID update(UUID uuid, Instant lastUpdated,
                              ProductCreateDTO productCreateDTO) {
 
         Product product = this.productRepository.findById(uuid)
@@ -64,7 +69,8 @@ public class ProductService implements IProductService {
         product.setProteins(productCreateDTO.getProteins());
         product.setCalories(productCreateDTO.getCalories());
         product.setWeight(productCreateDTO.getWeight());
-
         this.productRepository.save(product);
+
+        return uuid;
     }
 }

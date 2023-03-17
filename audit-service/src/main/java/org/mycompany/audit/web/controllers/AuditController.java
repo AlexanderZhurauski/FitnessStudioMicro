@@ -34,7 +34,7 @@ public class AuditController {
         return ResponseEntity.ok(this.auditService.get(uuid));
     }
 
-    @PostMapping
+    @PostMapping("/internalPost")
     public ResponseEntity<String> internalPost(@NotNull(message = "Cannot post an empty audit")
                                                    @RequestBody AuditDTO auditDTO) {
 

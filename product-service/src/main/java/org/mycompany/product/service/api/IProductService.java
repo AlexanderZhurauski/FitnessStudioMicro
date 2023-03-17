@@ -13,11 +13,8 @@ import java.time.Instant;
 import java.util.UUID;
 
 public interface IProductService {
-
-    @Audited(operationType = OperationType.CREATE, entityType = EntityType.PRODUCT)
-    void create(ProductCreateDTO productCreateDTO);
+    UUID create(ProductCreateDTO productCreateDTO);
     Page<ProductDTO> getPage(Pageable pageable);
     Product getByID(UUID uuid);
-    @Audited(operationType = OperationType.UPDATE, entityType = EntityType.PRODUCT)
-    void update(UUID uuid, Instant lastUpdated, ProductCreateDTO productCreateDTO);
+    UUID update(UUID uuid, Instant lastUpdated, ProductCreateDTO productCreateDTO);
 }

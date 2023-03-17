@@ -2,18 +2,19 @@ package org.mycompany.user.service;
 
 import org.mycompany.user.core.dto.enums.UserStatus;
 import org.mycompany.user.core.dto.user.*;
-import org.mycompany.user.dao.entities.User;
 import org.mycompany.user.security.JwtTokenHandler;
 import org.mycompany.user.security.UserHolder;
+import org.mycompany.user.security.api.IExtendedUserDetails;
 import org.mycompany.user.service.api.IUserAuthenticationService;
 import org.mycompany.user.service.api.IUserDataService;
 import org.mycompany.user.web.clients.IMailClient;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.UUID;
 
 public class UserAuthenticationService implements IUserAuthenticationService {
 
@@ -21,9 +22,7 @@ public class UserAuthenticationService implements IUserAuthenticationService {
     private IUserDataService userDataService;
     private IMailClient mailClient;
     private UserHolder userHolder;
-    private Converter<User, UserDTO> toDTOConverter;
     private Converter<UserRegistrationDTO, UserCreateDTO> registrationConverter;
-    private Converter<UserDetails, UserDetailsDTO> userDetailsConverter;
     private JwtTokenHandler tokenUtil;
     private PasswordEncoder passwordEncoder;
 
@@ -31,9 +30,7 @@ public class UserAuthenticationService implements IUserAuthenticationService {
                                      IUserDataService userDataService,
                                      IMailClient mailClient,
                                      UserHolder userHolder,
-                                     Converter<User, UserDTO> toDTOConverter,
                                      Converter<UserRegistrationDTO, UserCreateDTO> registrationConverter,
-                                     Converter<UserDetails, UserDetailsDTO> userDetailsConverter,
                                      JwtTokenHandler tokenUtil,
                                      PasswordEncoder passwordEncoder) {
 
@@ -41,9 +38,7 @@ public class UserAuthenticationService implements IUserAuthenticationService {
         this.userDataService = userDataService;
         this.mailClient = mailClient;
         this.userHolder = userHolder;
-        this.toDTOConverter = toDTOConverter;
         this.registrationConverter = registrationConverter;
-        this.userDetailsConverter = userDetailsConverter;
         this.tokenUtil = tokenUtil;
         this.passwordEncoder = passwordEncoder;
     }
@@ -64,16 +59,19 @@ public class UserAuthenticationService implements IUserAuthenticationService {
             throw new BadCredentialsException("The token provided doesn't " +
                     "match the token assigned to email '" + mail + "'");
         }
-        User confirmedUser = (User) this.userDetailsService.loadUserByUsername(mail);
-        this.userDataService.changeStatus(confirmedUser.getUuid(),
-                confirmedUser.getLastUpdated(), UserStatus.ACTIVATED);
+        IExtendedUserDetails userDetails = (IExtendedUserDetails) this.userDetailsService.loadUserByUsername(mail);
+        UUID userID = UUID.fromString(userDetails.getUserID());
+        UserDTO confirmedUser = this.userDataService.get(userID);
+
+        this.userDataService.changeStatus(userID, confirmedUser.getBaseEssence().getLastUpdated(),
+                UserStatus.ACTIVATED);
     }
 
     @Override
     public String login(UserLoginDTO userLoginDTO) {
 
         String userEmail = userLoginDTO.getMail();
-        UserDetails loadedUser = this.userDetailsService.loadUserByUsername(userEmail);
+        IExtendedUserDetails loadedUser = (IExtendedUserDetails) this.userDetailsService.loadUserByUsername(userEmail);
         String enteredPassword = userLoginDTO.getPassword();
         String actualPassword = loadedUser.getPassword();
 
@@ -86,12 +84,15 @@ public class UserAuthenticationService implements IUserAuthenticationService {
     @Override
     public UserDTO getMyData() {
 
-        User user = (User) this.userHolder.getAuthentication().getPrincipal();
-        return this.toDTOConverter.convert(user);
+        IExtendedUserDetails user = (IExtendedUserDetails) this.userHolder.getAuthentication().getPrincipal();
+        UUID userID = UUID.fromString(user.getUserID());
+
+        return this.userDataService.get(userID);
     }
 
     @Override
     public UserDetailsDTO getInternal(String username) {
-        return this.userDetailsConverter.convert(this.userDetailsService.loadUserByUsername(username));
+
+        return (UserDetailsDTO) this.userDetailsService.loadUserByUsername(username);
     }
 }

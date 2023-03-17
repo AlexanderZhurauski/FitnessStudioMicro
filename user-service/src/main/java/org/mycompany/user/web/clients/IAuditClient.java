@@ -1,7 +1,7 @@
-package org.mycompany.product.web.clients;
+package org.mycompany.user.web.clients;
 
 import jakarta.validation.constraints.NotNull;
-import org.mycompany.product.core.dto.audit.AuditDTO;
+import org.mycompany.user.core.dto.audit.AuditDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

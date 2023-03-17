@@ -1,6 +1,9 @@
 package org.mycompany.user.service;
 
 import jakarta.persistence.OptimisticLockException;
+import org.mycompany.user.audit.annotations.Audited;
+import org.mycompany.user.audit.enums.EntityType;
+import org.mycompany.user.audit.enums.OperationType;
 import org.mycompany.user.core.dto.enums.UserStatus;
 import org.mycompany.user.core.dto.user.UserCreateDTO;
 import org.mycompany.user.core.dto.user.UserDTO;
@@ -13,6 +16,7 @@ import org.springframework.core.convert.converter.Converter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.mycompany.user.service.api.IUserDataService;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.Instant;
@@ -37,9 +41,11 @@ public class UserDataService implements IUserDataService {
 
 
     @Override
-    public void create(UserCreateDTO userCreateDTO) {
+    @Audited(operationType = OperationType.CREATE, entityType = EntityType.USER)
+    public UUID create(UserCreateDTO userCreateDTO) {
+
         User user = this.toEntityConverter.convert(userCreateDTO);
-        this.userRepository.save(user);
+        return this.userRepository.save(user).getUuid();
     }
 
     @Override
@@ -57,7 +63,8 @@ public class UserDataService implements IUserDataService {
     }
 
     @Override
-    public void update(UUID uuid, Instant lastUpdated, UserCreateDTO userCreateDTO) {
+    @Audited(operationType = OperationType.UPDATE, entityType = EntityType.USER)
+    public UUID update(UUID uuid, Instant lastUpdated, UserCreateDTO userCreateDTO) {
         User user = this.userRepository.findById(uuid)
                 .orElseThrow(() -> new EntityNotFoundException(uuid, "user"));
 
@@ -71,7 +78,7 @@ public class UserDataService implements IUserDataService {
         user.setPassword(this.passwordEncoder.encode(userCreateDTO.getPassword()));
         user.setFullName(userCreateDTO.getFullName());
         user.setStatus(new Status(userCreateDTO.getStatus()));
-        this.userRepository.save(user);
+        return this.userRepository.save(user).getUuid();
     }
     @Override
     public boolean isActivated(String mail) {
@@ -82,7 +89,8 @@ public class UserDataService implements IUserDataService {
     }
 
     @Override
-    public void changeStatus(UUID uuid, Instant lastUpdated, UserStatus status) {
+    @Audited(operationType = OperationType.UPDATE, entityType = EntityType.USER)
+    public UUID changeStatus(UUID uuid, Instant lastUpdated, UserStatus status) {
         User user = this.userRepository.findById(uuid)
                 .orElseThrow(() -> new EntityNotFoundException(uuid, "user"));
 
@@ -92,6 +100,6 @@ public class UserDataService implements IUserDataService {
         }
 
         user.setStatus(new Status(status));
-        this.userRepository.save(user);
+        return this.userRepository.save(user).getUuid();
     }
 }

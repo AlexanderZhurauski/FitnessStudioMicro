@@ -1,16 +1,17 @@
-package org.mycompany.product.audit.advice;
+package org.mycompany.user.audit.advice;
 
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
-import org.mycompany.product.audit.annotations.Audited;
-import org.mycompany.product.audit.enums.EntityType;
-import org.mycompany.product.audit.enums.OperationType;
-import org.mycompany.product.core.dto.audit.AuditDTO;
-import org.mycompany.product.core.dto.audit.AuditUserDTO;
-import org.mycompany.product.security.UserHolder;
-import org.mycompany.product.security.api.IExtendedUserDetails;
-import org.mycompany.product.web.clients.IAuditClient;
+import org.mycompany.user.audit.annotations.Audited;
+import org.mycompany.user.audit.enums.EntityType;
+import org.mycompany.user.audit.enums.OperationType;
+import org.mycompany.user.core.dto.audit.AuditDTO;
+import org.mycompany.user.core.dto.audit.AuditUserDTO;
+import org.mycompany.user.core.dto.enums.UserRole;
+import org.mycompany.user.security.UserHolder;
+import org.mycompany.user.security.api.IExtendedUserDetails;
+import org.mycompany.user.web.clients.IAuditClient;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -54,7 +55,19 @@ public class AuditAspect {
         auditData.setId(uuid.toString());
 
         AuditUserDTO auditUser = new AuditUserDTO();
-        IExtendedUserDetails userDetails = (IExtendedUserDetails) this.userHolder.getAuthentication().getPrincipal();
+        Object tokenData = this.userHolder.getAuthentication().getPrincipal();
+        if (entityType.equals(EntityType.USER) && tokenData instanceof String) {
+            auditUser.setFio("SYSTEM");
+            auditUser.setMail("admin@admin.com");
+            auditUser.setUuid(UUID.randomUUID());
+            auditUser.setRole(UserRole.ADMIN);
+            auditData.setUser(auditUser);
+            String auditText = String.format(message, "SYSTEM", operationName, entityType.name());
+            auditData.setText(auditText);
+            this.auditClient.internalPost(auditData);
+            return;
+        }
+        IExtendedUserDetails userDetails = (IExtendedUserDetails) tokenData;
         auditUser.setMail(userDetails.getUsername());
         auditUser.setRole(userDetails.getRole());
         auditUser.setUuid(UUID.fromString(userDetails.getUserID()));

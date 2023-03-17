@@ -1,4 +1,4 @@
-package org.mycompany.audit.core.dto;
+package org.mycompany.user.core.dto.audit;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -6,14 +6,14 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import org.mycompany.audit.converters.json.InstantToUnix;
-import org.mycompany.audit.converters.json.UnixToInstant;
-import org.mycompany.audit.core.dto.enums.EntityType;
+import org.mycompany.user.audit.enums.EntityType;
+import org.mycompany.user.converters.json.InstantToUnix;
+import org.mycompany.user.converters.json.UnixToInstant;
 
 import java.time.Instant;
 import java.util.UUID;
 
-@JsonPropertyOrder({"uuid", "dt_create", "user"})
+@JsonPropertyOrder({"uuid", "dt_create"})
 public class AuditDTO {
     @NotNull
     private UUID uuid;

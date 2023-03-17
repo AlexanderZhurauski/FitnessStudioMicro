@@ -48,7 +48,8 @@ public class SecurityConfig {
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.POST, "/api/v1/audit").access(new WebExpressionAuthorizationManager(
+                        .requestMatchers(HttpMethod.POST, "/api/v1/audit/internalPost")
+                        .access(new WebExpressionAuthorizationManager(
                                 "hasIpAddress('product-service') or hasIpAddress('user-service')"
                         ))
                         .anyRequest().hasRole("ADMIN")

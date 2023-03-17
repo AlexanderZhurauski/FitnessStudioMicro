@@ -1,22 +1,33 @@
 package org.mycompany.audit.security;
 
 import io.jsonwebtoken.*;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.mycompany.audit.security.api.IExtendedUserDetails;
+import org.mycompany.audit.security.api.ITokenHandler;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-public class JwtTokenHandler {
+public class JwtTokenHandler implements ITokenHandler {
 
     private JWTProperty jwtProperty;
+    private static final String FULL_NAME = "fio";
+    private static final String USER_ID = "uid";
 
     public JwtTokenHandler(JWTProperty jwtProperty) {
         this.jwtProperty = jwtProperty;
     }
 
-    public String generateAccessToken(UserDetails user) {
+    @Override
+    public String generateAccessToken(IExtendedUserDetails user) {
+        Map<String, Object> userDetails = new HashMap<>();
+        userDetails.put(FULL_NAME, user.getFullName());
+        userDetails.put(USER_ID, user.getUserID());
+
         return Jwts.builder()
                 .setSubject(user.getUsername())
+                .addClaims(userDetails)
                 .setIssuer(this.jwtProperty.getIssuer())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(7)))// 1 week
@@ -24,6 +35,7 @@ public class JwtTokenHandler {
                 .compact();
     }
 
+    @Override
     public String getUsername(String token) {
         Claims claims = Jwts.parser()
                 .setSigningKey(this.jwtProperty.getSecret())
@@ -33,6 +45,7 @@ public class JwtTokenHandler {
         return claims.getSubject();
     }
 
+    @Override
     public Date getExpirationDate(String token) {
         Claims claims = Jwts.parser()
                 .setSigningKey(this.jwtProperty.getSecret())
@@ -42,6 +55,7 @@ public class JwtTokenHandler {
         return claims.getExpiration();
     }
 
+    @Override
     public boolean validate(String token) {
         try {
             Jwts.parser().setSigningKey(this.jwtProperty.getSecret()).parseClaimsJws(token);
@@ -58,5 +72,25 @@ public class JwtTokenHandler {
             //logger.error("JWT claims string is empty - {}", ex.getMessage());
         }
         return false;
+    }
+
+    @Override
+    public String getFullName(String token) {
+        Claims claims = Jwts.parser()
+                .setSigningKey(this.jwtProperty.getSecret())
+                .parseClaimsJws(token)
+                .getBody();
+
+        return claims.get(FULL_NAME, String.class);
+    }
+
+    @Override
+    public String getUserID(String token) {
+        Claims claims = Jwts.parser()
+                .setSigningKey(this.jwtProperty.getSecret())
+                .parseClaimsJws(token)
+                .getBody();
+
+        return claims.get(USER_ID, String.class);
     }
 }

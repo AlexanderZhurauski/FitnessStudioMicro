@@ -11,10 +11,10 @@ import java.util.UUID;
 
 public interface IUserDataService {
 
-    void create(UserCreateDTO userCreateDTO);
+    UUID create(UserCreateDTO userCreateDTO);
     Page<UserDTO> getPage(Pageable pageable);
     UserDTO get(UUID uuid);
-    void update(UUID uuid, Instant lastUpdated, UserCreateDTO userCreateDTO);
+    UUID update(UUID uuid, Instant lastUpdated, UserCreateDTO userCreateDTO);
     boolean isActivated(String mail);
-    void changeStatus(UUID uuid, Instant lastUpdated, UserStatus status);
+    UUID changeStatus(UUID uuid, Instant lastUpdated, UserStatus status);
 }

@@ -1,7 +1,7 @@
 package org.mycompany.product.config;
 
 import org.mycompany.product.converters.json.StringToInstantConverter;
-import org.mycompany.product.security.JwtTokenHandler;
+import org.mycompany.product.security.api.ITokenHandler;
 import org.mycompany.product.security.filters.JwtFilter;
 import org.mycompany.product.web.clients.IUserClient;
 import org.springframework.context.annotation.Bean;
@@ -17,7 +17,7 @@ public class WebConfigurer implements WebMvcConfigurer {
         registry.addConverter(new StringToInstantConverter());
     }
     @Bean
-    public JwtFilter jwtFilter(IUserClient userClient, JwtTokenHandler tokenHandler) {
+    public JwtFilter jwtFilter(IUserClient userClient, ITokenHandler tokenHandler) {
         return new JwtFilter(userClient, tokenHandler);
     }
 }

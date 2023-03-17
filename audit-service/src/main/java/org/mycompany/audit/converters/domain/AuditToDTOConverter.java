@@ -20,7 +20,7 @@ public class AuditToDTOConverter implements Converter<AuditEntity, AuditDTO> {
         userDTO.setFio(entity.getFio());
         userDTO.setMail(entity.getMail());
         userDTO.setRole(entity.getRole());
-        userDTO.setUuid(entity.getUuid());
+        userDTO.setUuid(entity.getUserUUID());
         dto.setUser(userDTO);
 
         return dto;

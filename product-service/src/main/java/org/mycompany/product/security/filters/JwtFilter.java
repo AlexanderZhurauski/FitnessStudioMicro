@@ -4,12 +4,12 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.mycompany.product.security.JwtTokenHandler;
+import org.mycompany.product.security.api.IExtendedUserDetails;
+import org.mycompany.product.security.api.ITokenHandler;
 import org.mycompany.product.web.clients.IUserClient;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -21,12 +21,12 @@ import static org.apache.logging.log4j.util.Strings.isEmpty;
 public class JwtFilter extends OncePerRequestFilter {
 
     private IUserClient userClient;
-    private JwtTokenHandler tokenUtil;
+    private ITokenHandler tokenHandler;
 
     public JwtFilter(IUserClient userClient,
-                     JwtTokenHandler tokenUtil) {
+                     ITokenHandler tokenHandler) {
         this.userClient = userClient;
-        this.tokenUtil = tokenUtil;
+        this.tokenHandler = tokenHandler;
     }
 
     @Override
@@ -42,12 +42,12 @@ public class JwtFilter extends OncePerRequestFilter {
         }
 
         final String token = header.split(" ")[1].trim();
-        if (!tokenUtil.validate(token)) {
+        if (!tokenHandler.validate(token)) {
             chain.doFilter(request, response);
             return;
         }
 
-        UserDetails userDetails = this.userClient.loadUserByUsername(tokenUtil.getUsername(token));
+        IExtendedUserDetails userDetails = this.userClient.loadUserByUsername(tokenHandler.getUsername(token));
 
         UsernamePasswordAuthenticationToken
                 authentication = new UsernamePasswordAuthenticationToken(

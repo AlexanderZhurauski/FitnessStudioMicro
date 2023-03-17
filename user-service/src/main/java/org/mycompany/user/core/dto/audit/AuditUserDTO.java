@@ -1,9 +1,9 @@
-package org.mycompany.product.core.dto.audit;
+package org.mycompany.user.core.dto.audit;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import org.mycompany.product.core.dto.enums.UserRole;
+import org.mycompany.user.core.dto.enums.UserRole;
 
 import java.util.UUID;
 

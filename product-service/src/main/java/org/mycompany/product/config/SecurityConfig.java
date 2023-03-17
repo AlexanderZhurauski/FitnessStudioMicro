@@ -3,6 +3,7 @@ package org.mycompany.product.config;
 import jakarta.servlet.http.HttpServletResponse;
 import org.mycompany.product.security.JWTProperty;
 import org.mycompany.product.security.JwtTokenHandler;
+import org.mycompany.product.security.api.ITokenHandler;
 import org.mycompany.product.security.filters.JwtFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -63,7 +64,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public JwtTokenHandler jwtTokenHandler(JWTProperty jwtProperty) {
+    public ITokenHandler jwtTokenHandler(JWTProperty jwtProperty) {
 
         return new JwtTokenHandler(jwtProperty);
     }
