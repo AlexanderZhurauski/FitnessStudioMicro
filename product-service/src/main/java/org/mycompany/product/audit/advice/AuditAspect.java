@@ -6,13 +6,15 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.mycompany.product.audit.annotations.Audited;
+import org.mycompany.product.audit.enums.EntityType;
 import org.mycompany.product.audit.enums.OperationType;
-import org.mycompany.product.core.dto.UserDetailsDTO;
 import org.mycompany.product.security.UserHolder;
 import org.mycompany.product.service.api.IProductService;
 import org.mycompany.product.service.api.IRecipeService;
 import org.mycompany.product.web.clients.IAuditClient;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.UUID;
 
 @Aspect
 public class AuditAspect {
@@ -33,33 +35,18 @@ public class AuditAspect {
     }
 
     @AfterReturning(value = "isAudited(audited))",
-            argNames = "joinPoint, audited")
-    public void sendAuditData(JoinPoint joinPoint, Audited audited) {
+            argNames = "joinPoint,audited,result", returning = "result")
+    public void sendAuditData(JoinPoint joinPoint, Audited audited, Object result) {
 
-        OperationType type = audited.type();
+        OperationType operationType = audited.operationType();
         String operationName;
-        switch (type) {
+        switch (operationType) {
             case CREATE -> operationName = "created the";
             case UPDATE -> operationName = "made an update to the";
             case DELETE -> operationName = "deleted the";
             default -> throw new IllegalArgumentException("Invalid operation type");
         }
 
-        MethodSignature signature = (MethodSignature) joinPoint.getSignature();
-        Class clazz = signature.getDeclaringType();
-        String entityType;
-        if (IProductService.class.isAssignableFrom(clazz)) {
-            entityType = "Product";
-        } else if (IRecipeService.class.isAssignableFrom(clazz)) {
-            entityType = "Recipe";
-        } else {
-            throw new IllegalArgumentException("Invalid entity type");
-        }
-
-        UserDetails userDetails = (UserDetails) this.userHolder.getAuthentication().getPrincipal();
-        String username = userDetails.getUsername();
-        String auditText = String.format(message, username, operationName, entityType);
-        String getRole = userDetails.getAuthorities().stream().findFirst().toString();
-        //getOtherUseData, clean this stuff up lol
+        EntityType entityType = audited.entityType();
     }
 }
