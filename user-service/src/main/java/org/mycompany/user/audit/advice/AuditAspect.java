@@ -20,6 +20,7 @@ import java.util.UUID;
 public class AuditAspect {
 
     private static final String message = "User '%s' has %s entity '%s'.";
+    private static final UUID SYSTEM_UUID = UUID.fromString("b3451290-c64f-11ed-afa1-0242ac120002");
 
     private final IAuditClient auditClient;
     private final UserHolder userHolder;
@@ -59,7 +60,7 @@ public class AuditAspect {
         if (entityType.equals(EntityType.USER) && tokenData instanceof String) {
             auditUser.setFio("SYSTEM");
             auditUser.setMail("admin@admin.com");
-            auditUser.setUuid(UUID.randomUUID());
+            auditUser.setUuid(SYSTEM_UUID);
             auditUser.setRole(UserRole.ADMIN);
             auditData.setUser(auditUser);
             String auditText = String.format(message, "SYSTEM", operationName, entityType.name());

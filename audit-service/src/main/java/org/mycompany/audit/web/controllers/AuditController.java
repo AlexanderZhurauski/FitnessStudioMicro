@@ -1,7 +1,9 @@
 package org.mycompany.audit.web.controllers;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.mycompany.audit.core.dto.AuditDTO;
+import org.mycompany.audit.core.dto.ReportDTO;
 import org.mycompany.audit.service.api.IAuditService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -9,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -40,5 +43,10 @@ public class AuditController {
 
         this.auditService.post(auditDTO);
         return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @GetMapping("/getAuditData")
+    public ResponseEntity<List<AuditDTO>> getReportData(@Valid @NotNull @RequestBody ReportDTO reportDTO) {
+        return ResponseEntity.ok(this.auditService.getAuditData(reportDTO));
     }
 }
