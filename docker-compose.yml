@@ -45,6 +45,17 @@ services:
     networks:
       - fitness_ntwrk
 
+  report-db:
+    build: report-postgresql
+    image: report_postgresql:1.0.0
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB_REPORT}
+    networks:
+      - fitness_ntwrk
+
   pgadmin:
     build: pgadmin
     image: fitness_pgadmin:1.0.0
@@ -110,6 +121,22 @@ services:
     networks:
       - fitness_ntwrk
 
+  report-service:
+    build: report-service
+    image: report-service:1.0.0
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL_REPORT}
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_ISSUER: ${JWT_ISSUER}
+      EUREKA_SERVER_URL: ${EUREKA_SERVER_URL}
+      MINIO_SERVER_URL: ${MINIO_SERVER_URL}
+      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
+      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
+    networks:
+      - fitness_ntwrk
+
   eureka-server:
     build: eureka-server
     image: eureka-server:1.0.0
@@ -117,7 +144,22 @@ services:
       - "8761:8761"
     networks:
       - fitness_ntwrk
-  
+
+  minio:
+    image: minio/minio:latest
+    restart: always
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+      MINIO_SERVER_URL: ${MINIO_SERVER_URL}
+      MINIO_BROWSER_REDIRECT_URL: ${MINIO_BROWSER_REDIRECT_URL}
+    volumes:
+      - ./data:/data
+    command: server /data --console-address :9001
+
   swagger-ui:
     build: swagger-ui
     image: fitness_swagger-ui:1.0.0
