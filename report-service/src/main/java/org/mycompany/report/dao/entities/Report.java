@@ -14,10 +14,10 @@ public class Report {
     @GeneratedValue
     private UUID uuid;
     @Column(name = "creation_time")
-    private Instant creationTime;
+    private Instant creationTime = Instant.now();
     @Column(name = "last_updated")
     @Version
-    private Instant lastUpdated;
+    private Instant lastUpdated = Instant.now();
     @Enumerated(EnumType.STRING)
     private ReportStatus status;
     @Column(name = "report_type")
