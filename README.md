@@ -31,9 +31,9 @@ To run this application locally, you need to have the following tools installed 
 Follow these steps to run the application:
 1. Clone this repository.
 2. Navigate to the root directory of the project.
-3. Create a new file in the root directory of your project called `.env` and add the environmental variables listed in .env.template with their corresponding values
+3. Create a new file in the root directory of your project called `.env` and add the environmental variables listed in `.env.template` with their corresponding values
 4. Run the following command to build the Docker images and start the containers:
-*docker-compose --env-file .env up --build*
+`docker-compose --env-file .env up --build`
 5. Wait for the application to start up (this may take a few minutes).
 ## API Documentation
 Upon running the docker-compose, the API documentation is available using Swagger UI. To access it, go to http://localhost:81 in your web browser.
