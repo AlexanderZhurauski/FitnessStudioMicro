@@ -8,6 +8,7 @@ import org.mycompany.report.dao.entities.Report;
 import org.mycompany.report.dao.repositories.IReportRepository;
 import org.mycompany.report.security.UserHolder;
 import org.mycompany.report.service.ReportService;
+import org.mycompany.report.service.api.IExcelService;
 import org.mycompany.report.web.clients.IAuditClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,9 +32,14 @@ public class ServiceConfig {
     }
 
     @Bean
-    public ReportService reportService(IReportRepository reportRepository, MinioClient minioClient,
+    public ReportService reportService(IExcelService excelService,
+                                       IReportRepository reportRepository,
+                                       IAuditClient auditClient,
+                                       MinioClient minioClient,
+                                       MinioProperty minioProperty,
                                        Converter<ReportDTO, Report> auditToEntity,
                                        Converter<Report, ReportInfoDTO> toDTO) {
-        return new ReportService(reportRepository, minioClient, auditToEntity, toDTO);
+        return new ReportService(excelService, reportRepository, auditClient,
+                minioClient, minioProperty, auditToEntity, toDTO);
     }
 }

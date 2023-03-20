@@ -8,6 +8,7 @@ public class MinioProperty {
     private String serverUrl;
     private String secretKey;
     private String accessKey;
+    private String excelBucket;
 
     public String getServerUrl() {
         return this.serverUrl;
@@ -31,5 +32,13 @@ public class MinioProperty {
 
     public void setAccessKey(String accessKey) {
         this.accessKey = accessKey;
+    }
+
+    public String getExcelBucket() {
+        return this.excelBucket;
+    }
+
+    public void setExcelBucket(String excelBucket) {
+        this.excelBucket = excelBucket;
     }
 }

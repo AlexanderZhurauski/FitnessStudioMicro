@@ -30,3 +30,4 @@ minio:
   server-url: ${MINIO_SERVER_URL}
   secret-key: ${MINIO_SECRET_KEY}
   access-key: ${MINIO_ACCESS_KEY}
+  excel-bucket: ${MINIO_EXCEL_BUCKET}
