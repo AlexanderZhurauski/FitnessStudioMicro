@@ -4,10 +4,12 @@ import io.minio.GetObjectArgs;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
 import io.minio.errors.*;
+import org.mycompany.report.audit.annotations.Audited;
+import org.mycompany.report.audit.enums.EntityType;
+import org.mycompany.report.audit.enums.OperationType;
 import org.mycompany.report.config.MinioProperty;
 import org.mycompany.report.core.dto.audit.AuditDTO;
 import org.mycompany.report.core.dto.enums.ReportStatus;
-import org.mycompany.report.core.dto.enums.ReportType;
 import org.mycompany.report.core.dto.report.ReportDTO;
 import org.mycompany.report.core.dto.report.ReportInfoDTO;
 import org.mycompany.report.core.exceptions.custom.EntityNotFoundException;
@@ -21,6 +23,7 @@ import org.springframework.core.convert.converter.Converter;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
@@ -61,6 +64,7 @@ public class ReportService implements IReportService {
 
     @Override
     @Transactional
+    @Audited(operationType = OperationType.CREATE, entityType = EntityType.REPORT)
     public UUID createAuditReport(ReportDTO reportDTO) {
         Report reportInfo = this.auditToEntity.convert(reportDTO);
         UUID reportUUID = this.reportRepository.save(reportInfo).getUuid();
@@ -70,20 +74,8 @@ public class ReportService implements IReportService {
                 .orElseThrow(() -> new EntityNotFoundException(reportUUID, "report"));
         reportBeingProcessed.setStatus(ReportStatus.PROGRESS);
         this.reportRepository.save(reportBeingProcessed);
+        auditExcelTask(auditData, reportBeingProcessed, reportUUID);
 
-        InputStreamResource excelDoc;
-
-        try {
-            excelDoc = this.excelService.convertToExcel(auditData);
-            saveExcelToCloud(excelDoc, reportUUID);
-        } catch (Exception e) {
-            reportBeingProcessed.setStatus(ReportStatus.ERROR);
-            this.reportRepository.save(reportBeingProcessed);
-            throw new RuntimeException(e);
-        }
-
-        reportBeingProcessed.setStatus(ReportStatus.DONE);
-        this.reportRepository.save(reportBeingProcessed);
         return reportUUID;
     }
 
@@ -115,6 +107,24 @@ public class ReportService implements IReportService {
                 .getStatus().equals(ReportStatus.DONE);
     }
 
+    @Async
+    @Transactional
+    public void auditExcelTask(List<AuditDTO> auditData,
+                               Report reportBeingProcessed, UUID reportUUID) {
+        InputStreamResource excelDoc;
+
+        try {
+            excelDoc = this.excelService.convertToExcel(auditData);
+            saveExcelToCloud(excelDoc, reportUUID);
+        } catch (Exception e) {
+            reportBeingProcessed.setStatus(ReportStatus.ERROR);
+            this.reportRepository.save(reportBeingProcessed);
+            throw new RuntimeException(e);
+        }
+
+        reportBeingProcessed.setStatus(ReportStatus.DONE);
+        this.reportRepository.save(reportBeingProcessed);
+    }
     private void saveExcelToCloud(InputStreamResource excelDoc, UUID reportUUID) throws IOException,
             ServerException, InsufficientDataException,
             ErrorResponseException, NoSuchAlgorithmException,

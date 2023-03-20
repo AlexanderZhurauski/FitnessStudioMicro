@@ -1,7 +1,9 @@
 package org.mycompany.report.core.exceptions.handlers;
 
 import jakarta.persistence.OptimisticLockException;
+import jakarta.validation.ConstraintViolationException;
 import org.mycompany.report.core.exceptions.custom.EntityNotFoundException;
+import org.mycompany.report.core.exceptions.custom.ExcelExportException;
 import org.mycompany.report.core.exceptions.custom.NoValidTokenFound;
 import org.mycompany.report.core.exceptions.messages.ErrorField;
 import org.mycompany.report.core.exceptions.messages.MultipleErrorResponse;
@@ -48,6 +50,22 @@ public class ControllerExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(List.of(errorResponse));
     }
 
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<MultipleErrorResponse> handleConstraintViolation(ConstraintViolationException ex) {
+
+        MultipleErrorResponse errorResponse = new MultipleErrorResponse();
+        List<ErrorField> errorFields = ex.getConstraintViolations()
+                .stream()
+                .map(violation -> new ErrorField(violation.getMessage(),
+                        violation.getPropertyPath().toString()))
+                .collect(Collectors.toList());
+
+        errorResponse.setLogref(STRUCTURED_ERROR);
+        errorResponse.setErrors(errorFields);
+
+        return ResponseEntity.badRequest().body(errorResponse);
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<MultipleErrorResponse> handleMethodArgumentNotValid(
             MethodArgumentNotValidException ex) {
@@ -67,7 +85,7 @@ public class ControllerExceptionHandler {
     }
 
     @ExceptionHandler({EntityNotFoundException.class, OptimisticLockException.class,
-            NullPointerException.class, SQLException.class})
+            NullPointerException.class, SQLException.class, ExcelExportException.class, IllegalArgumentException.class})
     public ResponseEntity<List<SingleErrorResponse>> handleGeneralServiceException(RuntimeException ex) {
         SingleErrorResponse errorResponse = new SingleErrorResponse();
         Throwable rootCause = NestedExceptionUtils.getMostSpecificCause(ex);

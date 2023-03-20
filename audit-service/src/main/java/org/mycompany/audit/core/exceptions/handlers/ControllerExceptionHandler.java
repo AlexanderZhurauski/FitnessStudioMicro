@@ -1,6 +1,7 @@
 package org.mycompany.audit.core.exceptions.handlers;
 
 import jakarta.persistence.OptimisticLockException;
+import jakarta.validation.ConstraintViolationException;
 import org.mycompany.audit.core.exceptions.custom.EntityNotFoundException;
 import org.mycompany.audit.core.exceptions.custom.NoValidTokenFound;
 import org.mycompany.audit.core.exceptions.messages.ErrorField;
@@ -46,6 +47,22 @@ public class ControllerExceptionHandler {
                 message);
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(List.of(errorResponse));
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<MultipleErrorResponse> handleConstraintViolation(ConstraintViolationException ex) {
+
+        MultipleErrorResponse errorResponse = new MultipleErrorResponse();
+        List<ErrorField> errorFields = ex.getConstraintViolations()
+                .stream()
+                .map(violation -> new ErrorField(violation.getMessage(),
+                        violation.getPropertyPath().toString()))
+                .collect(Collectors.toList());
+
+        errorResponse.setLogref(STRUCTURED_ERROR);
+        errorResponse.setErrors(errorFields);
+
+        return ResponseEntity.badRequest().body(errorResponse);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

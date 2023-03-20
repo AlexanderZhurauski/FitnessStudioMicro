@@ -47,7 +47,7 @@ public class SecurityConfig {
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         http
                 .authorizeHttpRequests(auth -> auth
-                        .anyRequest().authenticated()
+                        .anyRequest().hasRole("ADMIN")
                 );
 
         return http.build();

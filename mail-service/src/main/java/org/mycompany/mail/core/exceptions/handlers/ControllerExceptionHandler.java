@@ -1,6 +1,7 @@
 package org.mycompany.mail.core.exceptions.handlers;
 
 import jakarta.mail.MessagingException;
+import jakarta.validation.ConstraintViolationException;
 import org.mycompany.mail.core.exceptions.custom.EntityNotFoundException;
 import org.mycompany.mail.core.exceptions.custom.NoValidTokenFound;
 import org.mycompany.mail.core.exceptions.messages.ErrorField;
@@ -45,6 +46,21 @@ public class ControllerExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(List.of(errorResponse));
     }
 
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<MultipleErrorResponse> handleConstraintViolation(ConstraintViolationException ex) {
+
+        MultipleErrorResponse errorResponse = new MultipleErrorResponse();
+        List<ErrorField> errorFields = ex.getConstraintViolations()
+                .stream()
+                .map(violation -> new ErrorField(violation.getMessage(),
+                        violation.getPropertyPath().toString()))
+                .collect(Collectors.toList());
+
+        errorResponse.setLogref(STRUCTURED_ERROR);
+        errorResponse.setErrors(errorFields);
+
+        return ResponseEntity.badRequest().body(errorResponse);
+    }
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<MultipleErrorResponse> handleMethodArgumentNotValid(
             MethodArgumentNotValidException ex) {
