@@ -4,6 +4,8 @@ import io.minio.GetObjectArgs;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
 import io.minio.errors.*;
+import org.jobrunr.jobs.annotations.Job;
+import org.jobrunr.scheduling.JobScheduler;
 import org.mycompany.report.audit.annotations.Audited;
 import org.mycompany.report.audit.enums.EntityType;
 import org.mycompany.report.audit.enums.OperationType;
@@ -23,7 +25,6 @@ import org.springframework.core.convert.converter.Converter;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
@@ -43,6 +44,7 @@ public class ReportService implements IReportService {
     private IAuditClient auditClient;
     private MinioClient minioClient;
     private MinioProperty minioProperty;
+    private JobScheduler jobScheduler;
     private Converter<ReportDTO, Report> auditToEntity;
     private Converter<Report, ReportInfoDTO> toDTO;
 
@@ -51,6 +53,7 @@ public class ReportService implements IReportService {
                          IAuditClient auditClient,
                          MinioClient minioClient,
                          MinioProperty minioProperty,
+                         JobScheduler jobScheduler,
                          Converter<ReportDTO, Report> auditToEntity,
                          Converter<Report, ReportInfoDTO> toDTO) {
         this.excelService = excelService;
@@ -58,6 +61,7 @@ public class ReportService implements IReportService {
         this.auditClient = auditClient;
         this.minioClient = minioClient;
         this.minioProperty = minioProperty;
+        this.jobScheduler = jobScheduler;
         this.auditToEntity = auditToEntity;
         this.toDTO = toDTO;
     }
@@ -74,7 +78,7 @@ public class ReportService implements IReportService {
                 .orElseThrow(() -> new EntityNotFoundException(reportUUID, "report"));
         reportBeingProcessed.setStatus(ReportStatus.PROGRESS);
         this.reportRepository.save(reportBeingProcessed);
-        auditExcelTask(auditData, reportBeingProcessed, reportUUID);
+        this.jobScheduler.enqueue(() -> auditExcelTask(auditData, reportUUID));
 
         return reportUUID;
     }
@@ -107,11 +111,11 @@ public class ReportService implements IReportService {
                 .getStatus().equals(ReportStatus.DONE);
     }
 
-    @Async
-    @Transactional
-    public void auditExcelTask(List<AuditDTO> auditData,
-                               Report reportBeingProcessed, UUID reportUUID) {
+    @Job(name = "Audit Report Creation", retries = 1)
+    public void auditExcelTask(List<AuditDTO> auditData, UUID reportUUID) {
         InputStreamResource excelDoc;
+        Report reportBeingProcessed = this.reportRepository.findById(reportUUID)
+                .orElseThrow(() -> new EntityNotFoundException(reportUUID, "report"));
 
         try {
             excelDoc = this.excelService.convertToExcel(auditData);

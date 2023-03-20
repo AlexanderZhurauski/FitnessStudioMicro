@@ -1,6 +1,7 @@
 package org.mycompany.report.config;
 
 import io.minio.MinioClient;
+import org.jobrunr.scheduling.JobScheduler;
 import org.mycompany.report.audit.advice.AuditAspect;
 import org.mycompany.report.core.dto.report.ReportDTO;
 import org.mycompany.report.core.dto.report.ReportInfoDTO;
@@ -42,9 +43,10 @@ public class ServiceConfig {
                                        IAuditClient auditClient,
                                        MinioClient minioClient,
                                        MinioProperty minioProperty,
+                                       JobScheduler jobScheduler,
                                        Converter<ReportDTO, Report> auditToEntity,
                                        Converter<Report, ReportInfoDTO> toDTO) {
         return new ReportService(excelService, reportRepository, auditClient,
-                minioClient, minioProperty, auditToEntity, toDTO);
+                minioClient, minioProperty, jobScheduler, auditToEntity, toDTO);
     }
 }

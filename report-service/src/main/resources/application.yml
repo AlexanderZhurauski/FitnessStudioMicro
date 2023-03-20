@@ -22,6 +22,20 @@ eureka:
     register-with-eureka: true
     fetch-registry: true
 
+org:
+  jobrunr:
+    background-job-server:
+      enabled: true
+    dashboard:
+      enabled: true
+      port: 8000
+    miscellaneous:
+      allow-anonymous-data-usage: false
+    jobs:
+      retry-back-off-time-seed: 1
+    database:
+      table-prefix: app.
+
 jwt:
   secret: ${JWT_SECRET}
   issuer: ${JWT_ISSUER}
