@@ -5,21 +5,15 @@ import org.mycompany.report.core.dto.report.ReportInfoDTO;
 import org.mycompany.report.dao.entities.Report;
 import org.springframework.core.convert.converter.Converter;
 
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneId;
-
 public class ReportToDTOConverter implements Converter<Report, ReportInfoDTO> {
     @Override
     public ReportInfoDTO convert(Report report) {
 
         ReportInfoDTO reportDTO = new ReportInfoDTO();
         ReportDTO reportParams = new ReportDTO();
-        LocalDate from = instantToDate(report.getFrom());
-        LocalDate to = instantToDate(report.getTo());
 
-        reportParams.setFrom(from);
-        reportParams.setTo(to);
+        reportParams.setFrom(report.getFrom());
+        reportParams.setTo(report.getTo());
         reportParams.setUser(report.getUserID());
 
         reportDTO.setParams(reportParams);
@@ -31,9 +25,5 @@ public class ReportToDTOConverter implements Converter<Report, ReportInfoDTO> {
         reportDTO.setLastUpdated(report.getLastUpdated());
 
         return reportDTO;
-    }
-
-    private LocalDate instantToDate(Instant instant) {
-        return  instant.atZone(ZoneId.systemDefault()).toLocalDateTime().toLocalDate();
     }
 }

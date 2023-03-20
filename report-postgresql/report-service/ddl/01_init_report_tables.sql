@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS app.report(
     report_type VARCHAR(20) NOT NULL,
     description TEXT NOT NULL,
     user_id UUID NOT NULL,
-    start_time TIMESTAMP(6) WITH TIME ZONE NOT NULL,
-    end_time TIMESTAMP(6) WITH TIME ZONE NOT NULL,
+    start_time DATE NOT NULL,
+    end_time DATE NOT NULL,
     CONSTRAINT pk_report_id PRIMARY KEY (uuid)
 )

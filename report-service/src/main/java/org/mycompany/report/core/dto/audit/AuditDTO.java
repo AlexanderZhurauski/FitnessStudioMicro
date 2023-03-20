@@ -13,7 +13,7 @@ import org.mycompany.report.converters.json.UnixToInstant;
 import java.time.Instant;
 import java.util.UUID;
 
-@JsonPropertyOrder({"uuid", "dt_create"})
+@JsonPropertyOrder({"uuid", "dt_create", "user"})
 public class AuditDTO {
     @NotNull
     private UUID uuid;

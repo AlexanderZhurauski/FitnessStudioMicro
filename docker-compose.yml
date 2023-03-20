@@ -143,9 +143,10 @@ services:
       JWT_SECRET: ${JWT_SECRET}
       JWT_ISSUER: ${JWT_ISSUER}
       EUREKA_SERVER_URL: ${EUREKA_SERVER_URL}
-      MINIO_SERVER_URL: ${MINIO_SERVER_URL}
+      MINIO_SERVER_URL: ${MINIO_SERVER_URL_REPORT}
       MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
       MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
+      MINIO_EXCEL_BUCKET: ${MINIO_EXCEL_BUCKET}
     depends_on:
       - eureka-server
       - report-db
@@ -175,6 +176,8 @@ services:
     volumes:
       - ./data:/data
     command: server /data --console-address :9001
+    networks:
+      - fitness_ntwrk
 
   swagger-ui:
     build: swagger-ui

@@ -54,9 +54,11 @@ public class ExcelService implements IExcelService {
                 currentRow.createCell(6, CellType.STRING).setCellValue(auditRow.getText());
                 currentRow.createCell(7, CellType.STRING).setCellValue(auditRow.getType().toString());
                 currentRow.createCell(8, CellType.STRING).setCellValue(auditRow.getId());
+                rowNum++;
             }
-
+            setAutosize(sheet);
             workbook.write(out);
+
             return new InputStreamResource(new ByteArrayInputStream(out.toByteArray()));
         } catch (IOException e) {
             throw new IOException("There has been an error in creating the excel report", e);
@@ -81,5 +83,11 @@ public class ExcelService implements IExcelService {
         ZoneId zoneId = ZoneId.systemDefault();
         LocalDateTime localDateTime = LocalDateTime.ofInstant(instant, zoneId);
         return localDateTime.format(DATE_TIME_FORMATTER);
+    }
+
+    private void setAutosize(Sheet sheet) {
+        for (int i = 0; i < sheet.getRow(0).getLastCellNum(); i++) {
+            sheet.autoSizeColumn(i);
+        }
     }
 }

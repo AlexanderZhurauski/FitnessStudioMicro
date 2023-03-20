@@ -48,13 +48,9 @@ public class SecurityConfig {
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.GET, "/api/v1/audit/getAuditData")
-                        .access(new WebExpressionAuthorizationManager(
-                                "hasIpAddress('report-service')"
-                        ))
-                        .requestMatchers(HttpMethod.POST, "/api/v1/audit/internalPost")
-                        .access(new WebExpressionAuthorizationManager(
-                                "hasIpAddress('product-service') or hasIpAddress('user-service')"
+                        .requestMatchers(HttpMethod.POST, "/api/v1/audit/getReportData").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/v1/audit/internalPost").access(new WebExpressionAuthorizationManager(
+                                "hasIpAddress('product-service') or hasIpAddress('user-service') or hasIpAddress('report-service')"
                         ))
                         .anyRequest().hasRole("ADMIN")
                 );

@@ -11,7 +11,7 @@ import java.util.UUID;
 
 public interface IReportService {
 
-    UUID create(ReportType type, ReportDTO reportDTO);
+    UUID createAuditReport(ReportDTO reportDTO);
     Page<ReportInfoDTO> getPage(Pageable pageable);
     InputStreamResource export(UUID uuid);
     boolean isAvailable(UUID uuid);

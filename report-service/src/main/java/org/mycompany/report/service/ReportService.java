@@ -21,6 +21,7 @@ import org.springframework.core.convert.converter.Converter;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.security.InvalidKeyException;
@@ -59,13 +60,31 @@ public class ReportService implements IReportService {
     }
 
     @Override
-    public UUID create(ReportType type, ReportDTO reportDTO) {
-        switch(type) {
-            case JOURNAL_AUDIT -> {
-                return createAuditReport(reportDTO);
-            }
-            default -> throw new IllegalArgumentException("Invalid report type provided");
+    @Transactional
+    public UUID createAuditReport(ReportDTO reportDTO) {
+        Report reportInfo = this.auditToEntity.convert(reportDTO);
+        UUID reportUUID = this.reportRepository.save(reportInfo).getUuid();
+
+        List<AuditDTO> auditData = this.auditClient.getReportData(reportDTO);
+        Report reportBeingProcessed = this.reportRepository.findById(reportUUID)
+                .orElseThrow(() -> new EntityNotFoundException(reportUUID, "report"));
+        reportBeingProcessed.setStatus(ReportStatus.PROGRESS);
+        this.reportRepository.save(reportBeingProcessed);
+
+        InputStreamResource excelDoc;
+
+        try {
+            excelDoc = this.excelService.convertToExcel(auditData);
+            saveExcelToCloud(excelDoc, reportUUID);
+        } catch (Exception e) {
+            reportBeingProcessed.setStatus(ReportStatus.ERROR);
+            this.reportRepository.save(reportBeingProcessed);
+            throw new RuntimeException(e);
         }
+
+        reportBeingProcessed.setStatus(ReportStatus.DONE);
+        this.reportRepository.save(reportBeingProcessed);
+        return reportUUID;
     }
 
     @Override
@@ -94,32 +113,6 @@ public class ReportService implements IReportService {
         return this.reportRepository.findById(uuid)
                 .orElseThrow(() -> new EntityNotFoundException(uuid, "report"))
                 .getStatus().equals(ReportStatus.DONE);
-    }
-
-    private UUID createAuditReport(ReportDTO reportDTO) {
-        Report reportInfo = this.auditToEntity.convert(reportDTO);
-        UUID reportUUID = this.reportRepository.save(reportInfo).getUuid();
-
-        List<AuditDTO> auditData = this.auditClient.getReportData(reportDTO).getBody();
-        Report reportBeingProcessed = this.reportRepository.findById(reportUUID)
-                .orElseThrow(() -> new EntityNotFoundException(reportUUID, "report"));
-        reportBeingProcessed.setStatus(ReportStatus.PROGRESS);
-        this.reportRepository.save(reportBeingProcessed);
-
-        InputStreamResource excelDoc;
-
-        try {
-            excelDoc = this.excelService.convertToExcel(auditData);
-            saveExcelToCloud(excelDoc, reportUUID);
-        } catch (Exception e) {
-            reportBeingProcessed.setStatus(ReportStatus.ERROR);
-            this.reportRepository.save(reportBeingProcessed);
-            throw new RuntimeException(e);
-        }
-
-        reportBeingProcessed.setStatus(ReportStatus.DONE);
-        this.reportRepository.save(reportBeingProcessed);
-        return reportUUID;
     }
 
     private void saveExcelToCloud(InputStreamResource excelDoc, UUID reportUUID) throws IOException,

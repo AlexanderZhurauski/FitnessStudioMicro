@@ -6,7 +6,6 @@ import org.mycompany.report.core.dto.audit.AuditDTO;
 import org.mycompany.report.core.dto.report.ReportDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -19,6 +18,6 @@ public interface IAuditClient {
     ResponseEntity<String> internalPost(@NotNull(message = "Cannot post an empty audit")
                                         @RequestBody AuditDTO auditDTO);
 
-    @GetMapping("api/v1/audit/getAuditData")
-    ResponseEntity<List<AuditDTO>> getReportData(@Valid @NotNull @RequestBody ReportDTO reportDTO);
+    @PostMapping("api/v1/audit/getReportData")
+    List<AuditDTO> getReportData(@Valid @NotNull @RequestBody ReportDTO reportDTO);
 }

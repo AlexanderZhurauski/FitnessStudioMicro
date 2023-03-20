@@ -22,7 +22,7 @@ import java.util.UUID;
 @RequestMapping("/api/v1/report")
 public class ReportController {
 
-    private static final String FILE_ATTACHMENT = "attachment; filename=%s";
+    private static final String FILE_ATTACHMENT = "attachment; filename=%s.xlsx";
     private static final String EXCEL_SPREADSHEET = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
     private final IReportService reportService;
 
@@ -34,7 +34,7 @@ public class ReportController {
     public ResponseEntity<String> postReport(@Valid @NotNull @RequestBody ReportDTO reportDTO,
                                              @PathVariable @NotNull ReportType type) {
 
-        this.reportService.create(type, reportDTO);
+        this.reportService.createAuditReport(reportDTO);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
     @GetMapping

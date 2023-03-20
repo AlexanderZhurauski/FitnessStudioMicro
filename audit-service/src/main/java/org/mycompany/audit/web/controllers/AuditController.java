@@ -45,8 +45,8 @@ public class AuditController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @GetMapping("/getAuditData")
-    public ResponseEntity<List<AuditDTO>> getReportData(@Valid @NotNull @RequestBody ReportDTO reportDTO) {
-        return ResponseEntity.ok(this.auditService.getAuditData(reportDTO));
+    @PostMapping("/getReportData")
+    public List<AuditDTO> getReportData(@Valid @NotNull @RequestBody ReportDTO reportDTO) {
+        return this.auditService.getAuditData(reportDTO);
     }
 }

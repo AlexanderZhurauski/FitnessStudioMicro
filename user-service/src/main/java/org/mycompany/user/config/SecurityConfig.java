@@ -53,7 +53,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/v1/users/registration").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/v1/users/login").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/users/getInternal").access(new WebExpressionAuthorizationManager(
-                                "hasIpAddress('product-service') or hasIpAddress('audit-service')"
+                                "hasIpAddress('product-service') or hasIpAddress('audit-service') or hasIpAddress('report-service')"
                         ))
                         .requestMatchers(HttpMethod.GET, "/api/v1/users/me").authenticated()
                         .requestMatchers("/api/v1/users/**").hasRole("ADMIN")

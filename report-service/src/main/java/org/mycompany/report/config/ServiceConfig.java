@@ -7,6 +7,7 @@ import org.mycompany.report.core.dto.report.ReportInfoDTO;
 import org.mycompany.report.dao.entities.Report;
 import org.mycompany.report.dao.repositories.IReportRepository;
 import org.mycompany.report.security.UserHolder;
+import org.mycompany.report.service.ExcelService;
 import org.mycompany.report.service.ReportService;
 import org.mycompany.report.service.api.IExcelService;
 import org.mycompany.report.web.clients.IAuditClient;
@@ -31,6 +32,10 @@ public class ServiceConfig {
                 .build();
     }
 
+    @Bean
+    public ExcelService excelService() {
+        return new ExcelService();
+    }
     @Bean
     public ReportService reportService(IExcelService excelService,
                                        IReportRepository reportRepository,

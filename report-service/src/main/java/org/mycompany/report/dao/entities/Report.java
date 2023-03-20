@@ -5,6 +5,7 @@ import org.mycompany.report.core.dto.enums.ReportStatus;
 import org.mycompany.report.core.dto.enums.ReportType;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Entity
@@ -27,16 +28,16 @@ public class Report {
     @Column(name = "user_id")
     private UUID userID;
     @Column(name = "start_time")
-    private Instant from;
+    private LocalDate from;
     @Column(name = "end_time")
-    private Instant to;
+    private LocalDate to;
 
     public Report() {
     }
 
     public Report(UUID uuid, Instant creationTime, Instant lastUpdated,
                   ReportStatus status, ReportType type, String description,
-                  UUID userID, Instant from, Instant to) {
+                  UUID userID, LocalDate from, LocalDate to) {
         this.uuid = uuid;
         this.creationTime = creationTime;
         this.lastUpdated = lastUpdated;
@@ -104,19 +105,19 @@ public class Report {
         this.userID = userID;
     }
 
-    public Instant getFrom() {
+    public LocalDate getFrom() {
         return this.from;
     }
 
-    public void setFrom(Instant from) {
+    public void setFrom(LocalDate from) {
         this.from = from;
     }
 
-    public Instant getTo() {
+    public LocalDate getTo() {
         return this.to;
     }
 
-    public void setTo(Instant to) {
+    public void setTo(LocalDate to) {
         this.to = to;
     }
 }
