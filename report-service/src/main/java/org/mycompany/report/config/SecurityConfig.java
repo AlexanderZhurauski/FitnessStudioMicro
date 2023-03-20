@@ -7,7 +7,6 @@ import org.mycompany.report.security.api.ITokenHandler;
 import org.mycompany.report.security.filters.JwtFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -48,10 +47,6 @@ public class SecurityConfig {
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.POST, "/api/v1/product").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.POST, "/api/v1/recipe").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "/api/v1/product/{uuid}/dt_update/{lastUpdated}").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "/api/v1/recipe/{uuid}/dt_update/{lastUpdated}").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 );
 
