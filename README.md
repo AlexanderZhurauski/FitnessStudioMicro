@@ -27,6 +27,7 @@ To run this application locally, you need to have the following tools installed 
 
 * Docker
 * Docker Compose
+
 Follow these steps to run the application:
 1. Clone this repository.
 2. Navigate to the root directory of the project.
