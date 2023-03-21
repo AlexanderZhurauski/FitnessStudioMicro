@@ -51,8 +51,8 @@ org:
     database:
       table-prefix: app.
 
-mail:
-  confirmation:
+mail-confirmation:
+    sender: ${MAIL_USER}
     link: ${MAIL_CONFIRMATION_LINK}
     subject: Activate your Fitness Studio Account
     text: "Dear valued user,\n\nThank you for choosing FitnessStudio, your ultimate fitness solution.

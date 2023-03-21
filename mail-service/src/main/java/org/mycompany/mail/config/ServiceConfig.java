@@ -13,7 +13,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 public class ServiceConfig {
     @Bean
     public IEmailService emailService(JavaMailSender mailSender, JobScheduler jobScheduler,
-                                      IConfirmationTokenRepository tokenRepository) {
-        return new EmailService(mailSender, jobScheduler, tokenRepository);
+                                      IConfirmationTokenRepository tokenRepository, MailProperty mailProperty) {
+        return new EmailService(mailSender, jobScheduler, tokenRepository, mailProperty);
     }
 }

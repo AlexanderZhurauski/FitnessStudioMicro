@@ -4,12 +4,12 @@ import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.jobrunr.jobs.annotations.Job;
 import org.jobrunr.scheduling.JobScheduler;
+import org.mycompany.mail.config.MailProperty;
 import org.mycompany.mail.core.exceptions.custom.EntityNotFoundException;
 import org.mycompany.mail.core.exceptions.custom.NoValidTokenFound;
 import org.mycompany.mail.dao.entities.ConfirmationToken;
 import org.mycompany.mail.dao.repositories.IConfirmationTokenRepository;
 import org.mycompany.mail.service.api.IEmailService;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,21 +21,15 @@ public class EmailService implements IEmailService {
     private JavaMailSender mailSender;
     private JobScheduler jobScheduler;
     private IConfirmationTokenRepository tokenRepository;
-    @Value("${spring.mail.username}")
-    private String senderAddress;
-    @Value("${mail.confirmation.link}")
-    private String confirmationLink;
-    @Value("${mail.confirmation.subject}")
-    private String confirmationSubject;
-    @Value("${mail.confirmation.text}")
-    private String confirmationText;
+    private MailProperty mailProperty;
 
     public EmailService(JavaMailSender mailSender, JobScheduler jobScheduler,
-                        IConfirmationTokenRepository tokenRepository) {
+                        IConfirmationTokenRepository tokenRepository, MailProperty mailProperty) {
 
         this.mailSender = mailSender;
         this.jobScheduler = jobScheduler;
         this.tokenRepository = tokenRepository;
+        this.mailProperty = mailProperty;
     }
 
     @Override
@@ -67,11 +61,11 @@ public class EmailService implements IEmailService {
         MimeMessage confirmationMail = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(confirmationMail, true);
 
-        helper.setFrom(senderAddress);
+        helper.setFrom(mailProperty.getSender());
         helper.setTo(address);
-        helper.setSubject(confirmationSubject);
-        String link = String.format(confirmationLink, token, address);
-        String text = String.format(confirmationText, link);
+        helper.setSubject(mailProperty.getSubject());
+        String link = String.format(mailProperty.getLink(), token, address);
+        String text = String.format(mailProperty.getText(), link);
         helper.setText(text);
 
         mailSender.send(confirmationMail);
