@@ -37,7 +37,7 @@ public class UserDTO {
     }
 
     public BaseEssence getBaseEssence() {
-        return baseEssence;
+        return this.baseEssence;
     }
 
     public void setBaseEssence(BaseEssence baseEssence) {
@@ -45,7 +45,7 @@ public class UserDTO {
     }
 
     public String getMail() {
-        return mail;
+        return this.mail;
     }
 
     public void setMail(String mail) {
@@ -54,7 +54,7 @@ public class UserDTO {
 
     @JsonProperty("fio")
     public String getFullName() {
-        return fullName;
+        return this.fullName;
     }
 
     @JsonProperty("fio")
@@ -63,7 +63,7 @@ public class UserDTO {
     }
 
     public UserRole getRole() {
-        return role;
+        return this.role;
     }
 
     public void setRole(UserRole role) {
@@ -71,7 +71,7 @@ public class UserDTO {
     }
 
     public UserStatus getStatus() {
-        return status;
+        return this.status;
     }
 
     public void setStatus(UserStatus status) {

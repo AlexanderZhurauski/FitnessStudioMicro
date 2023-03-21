@@ -40,9 +40,24 @@ public class ControllerExceptionHandler {
     private static final String INVALID_ARGUMENT = "The argument passed to the method is invalid";
     private static final String CONSTRAINT_VIOLATION = "One or more constraints have been violated!";
     private static final String SERVICE_COMMUNICATION_ERROR = "There has been an error in communication between services.";
-    private static final String DATABASE_ERROR = "There has been an error in the database layer. Please contract the administrator!";
+    private static final String DATABASE_ERROR = "There has been an error in the database layer. Please contact the administrator!";
     private Logger logger = LoggerFactory.getLogger(ControllerExceptionHandler.class);
 
+    @ExceptionHandler({NoValidTokenFound.class, BadCredentialsException.class, UsernameNotFoundException.class})
+    public ResponseEntity<List<SingleErrorResponse>> handleAuthException(RuntimeException ex) {
+        SingleErrorResponse errorResponse = new SingleErrorResponse();
+        errorResponse.setLogref(ERROR);
+
+        if (ex instanceof NoValidTokenFound || ex instanceof BadCredentialsException) {
+            errorResponse.setMessage(ex.getMessage());
+            this.logger.error(ex.getMessage(), ex);
+        } else {
+            errorResponse.setMessage(AUTHENTICATION_FAILED);
+            this.logger.error(AUTHENTICATION_FAILED, ex);
+        }
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(List.of(errorResponse));
+    }
     @ExceptionHandler(MissingPathVariableException.class)
     public ResponseEntity<List<SingleErrorResponse>> handleMissingPathVariableException(
             MissingPathVariableException ex) {
@@ -117,20 +132,17 @@ public class ControllerExceptionHandler {
     public ResponseEntity<List<SingleErrorResponse>> handlePersistenceLayerException(RuntimeException ex) {
         SingleErrorResponse errorResponse = new SingleErrorResponse();
         errorResponse.setLogref(ERROR);
+
+        if (ex instanceof EntityNotFoundException || ex instanceof PropertyValueException) {
+            errorResponse.setMessage(ex.getMessage());
+            this.logger.error(DATABASE_ERROR, ex);
+            return ResponseEntity.badRequest().body(List.of(errorResponse));
+        }
+
         errorResponse.setMessage(DATABASE_ERROR);
         this.logger.error(DATABASE_ERROR, ex);
 
         return ResponseEntity.internalServerError().body(List.of(errorResponse));
-    }
-
-    @ExceptionHandler({NoValidTokenFound.class, BadCredentialsException.class, UsernameNotFoundException.class})
-    public ResponseEntity<List<SingleErrorResponse>> handleAuthException(RuntimeException ex) {
-        SingleErrorResponse errorResponse = new SingleErrorResponse();
-        errorResponse.setLogref(ERROR);
-        errorResponse.setMessage(AUTHENTICATION_FAILED);
-        this.logger.error(AUTHENTICATION_FAILED, ex);
-
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(List.of(errorResponse));
     }
 
     @ExceptionHandler({FeignException.class})

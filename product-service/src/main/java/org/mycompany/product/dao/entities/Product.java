@@ -51,7 +51,7 @@ public class Product {
     }
 
     public UUID getUuid() {
-        return uuid;
+        return this.uuid;
     }
 
     public void setUuid(UUID uuid) {
@@ -59,7 +59,7 @@ public class Product {
     }
 
     public Instant getCreationTime() {
-        return creationTime;
+        return this.creationTime;
     }
 
     public void setCreationTime(Instant creationTime) {
@@ -67,7 +67,7 @@ public class Product {
     }
 
     public Instant getLastUpdated() {
-        return lastUpdated;
+        return this.lastUpdated;
     }
 
     public void setLastUpdated(Instant lastUpdated) {
@@ -75,7 +75,7 @@ public class Product {
     }
 
     public String getTitle() {
-        return title;
+        return this.title;
     }
 
     public void setTitle(String title) {
@@ -83,7 +83,7 @@ public class Product {
     }
 
     public int getWeight() {
-        return weight;
+        return this.weight;
     }
 
     public void setWeight(int weight) {
@@ -91,7 +91,7 @@ public class Product {
     }
 
     public int getCalories() {
-        return calories;
+        return this.calories;
     }
 
     public void setCalories(int calories) {
@@ -99,7 +99,7 @@ public class Product {
     }
 
     public double getProteins() {
-        return proteins;
+        return this.proteins;
     }
 
     public void setProteins(double proteins) {
@@ -107,7 +107,7 @@ public class Product {
     }
 
     public double getFats() {
-        return fats;
+        return this.fats;
     }
 
     public void setFats(double fats) {
@@ -115,7 +115,7 @@ public class Product {
     }
 
     public double getCarbohydrates() {
-        return carbohydrates;
+        return this.carbohydrates;
     }
 
     public void setCarbohydrates(double carbohydrates) {

@@ -5,4 +5,4 @@ ADD ./target/audit-service.jar /app/
 
 CMD ["java", "-Xmx200m", "-jar", "/app/audit-service.jar"]
 
-EXPOSE 8085 8085
+EXPOSE 8085 8080

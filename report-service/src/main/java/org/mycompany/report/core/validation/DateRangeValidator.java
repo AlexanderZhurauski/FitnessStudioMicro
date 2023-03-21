@@ -18,8 +18,8 @@ public class DateRangeValidator implements ConstraintValidator<DateRange, Object
 
     public boolean isValid(Object value, ConstraintValidatorContext context) {
         BeanWrapper beanWrapper = new BeanWrapperImpl(value);
-        LocalDate from = (LocalDate) beanWrapper.getPropertyValue(fromProperty);
-        LocalDate to = (LocalDate) beanWrapper.getPropertyValue(toProperty);
+        LocalDate from = (LocalDate) beanWrapper.getPropertyValue(this.fromProperty);
+        LocalDate to = (LocalDate) beanWrapper.getPropertyValue(this.toProperty);
 
         return from == null || to == null || from.isBefore(to) || from.isEqual(to);
     }

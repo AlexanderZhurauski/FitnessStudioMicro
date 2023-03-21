@@ -8,7 +8,7 @@ public class JWTProperty {
     private String issuer;
 
     public String getSecret() {
-        return secret;
+        return this.secret;
     }
 
     public void setSecret(String secret) {
@@ -16,7 +16,7 @@ public class JWTProperty {
     }
 
     public String getIssuer() {
-        return issuer;
+        return this.issuer;
     }
 
     public void setIssuer(String issuer) {

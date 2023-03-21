@@ -16,7 +16,6 @@ import org.springframework.core.convert.converter.Converter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.mycompany.user.service.api.IUserDataService;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.Instant;
@@ -59,7 +58,7 @@ public class UserDataService implements IUserDataService {
     public UserDTO get(UUID uuid) {
         User user = this.userRepository.findById(uuid)
                 .orElseThrow(() -> new EntityNotFoundException(uuid, "user"));
-        return toDTOConverter.convert(user);
+        return this.toDTOConverter.convert(user);
     }
 
     @Override

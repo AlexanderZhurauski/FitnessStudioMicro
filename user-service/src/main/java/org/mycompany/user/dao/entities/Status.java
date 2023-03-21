@@ -24,7 +24,7 @@ public class Status {
     }
 
     public int getId() {
-        return id;
+        return this.id;
     }
 
     public void setId(int id) {
@@ -32,7 +32,7 @@ public class Status {
     }
 
     public UserStatus getStatus() {
-        return status;
+        return this.status;
     }
 
     public void setStatus(UserStatus status) {

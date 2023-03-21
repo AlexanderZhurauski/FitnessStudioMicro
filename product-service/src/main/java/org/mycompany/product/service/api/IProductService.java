@@ -1,8 +1,5 @@
 package org.mycompany.product.service.api;
 
-import org.mycompany.product.audit.annotations.Audited;
-import org.mycompany.product.audit.enums.EntityType;
-import org.mycompany.product.audit.enums.OperationType;
 import org.mycompany.product.core.dto.product.ProductCreateDTO;
 import org.mycompany.product.core.dto.product.ProductDTO;
 import org.mycompany.product.dao.entities.Product;

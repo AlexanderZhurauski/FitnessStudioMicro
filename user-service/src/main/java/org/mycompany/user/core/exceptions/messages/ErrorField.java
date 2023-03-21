@@ -11,10 +11,10 @@ public class ErrorField {
     }
 
     public String getMessage() {
-        return message;
+        return this.message;
     }
 
     public String getField() {
-        return field;
+        return this.field;
     }
 }

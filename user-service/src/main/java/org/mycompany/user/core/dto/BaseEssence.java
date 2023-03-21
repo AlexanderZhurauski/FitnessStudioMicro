@@ -31,7 +31,7 @@ public class BaseEssence {
     }
 
     public UUID getUuid() {
-        return uuid;
+        return this.uuid;
     }
 
     public void setUuid(UUID uuid) {
@@ -40,7 +40,7 @@ public class BaseEssence {
 
     @JsonProperty("dt_create")
     public Instant getCreationTime() {
-        return creationTime;
+        return this.creationTime;
     }
 
     @JsonProperty("dt_create")
@@ -50,7 +50,7 @@ public class BaseEssence {
 
     @JsonProperty("dt_update")
     public Instant getLastUpdated() {
-        return lastUpdated;
+        return this.lastUpdated;
     }
 
     @JsonProperty("dt_update")

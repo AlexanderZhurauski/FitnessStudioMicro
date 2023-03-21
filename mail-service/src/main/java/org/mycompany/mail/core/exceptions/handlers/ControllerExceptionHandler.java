@@ -6,7 +6,6 @@ import org.hibernate.PropertyValueException;
 import org.hibernate.exception.DataException;
 import org.mycompany.mail.core.exceptions.custom.EntityNotFoundException;
 import org.mycompany.mail.core.exceptions.custom.ExcelExportException;
-import org.mycompany.mail.core.exceptions.custom.NoValidTokenFound;
 import org.mycompany.mail.core.exceptions.messages.ErrorField;
 import org.mycompany.mail.core.exceptions.messages.MultipleErrorResponse;
 import org.mycompany.mail.core.exceptions.messages.SingleErrorResponse;
@@ -37,7 +36,7 @@ public class ControllerExceptionHandler {
     private static final String INVALID_ARGUMENT = "The argument passed to the method is invalid";
     private static final String CONSTRAINT_VIOLATION = "One or more constraints have been violated!";
     private static final String SERVICE_COMMUNICATION_ERROR = "There has been an error in communication between services.";
-    private static final String DATABASE_ERROR = "There has been an error in the database layer. Please contract the administrator!";
+    private static final String DATABASE_ERROR = "There has been an error in the database layer. Please contact the administrator!";
     private Logger logger = LoggerFactory.getLogger(ControllerExceptionHandler.class);
 
     @ExceptionHandler(MissingPathVariableException.class)
@@ -114,6 +113,13 @@ public class ControllerExceptionHandler {
     public ResponseEntity<List<SingleErrorResponse>> handlePersistenceLayerException(RuntimeException ex) {
         SingleErrorResponse errorResponse = new SingleErrorResponse();
         errorResponse.setLogref(ERROR);
+
+        if (ex instanceof EntityNotFoundException || ex instanceof PropertyValueException) {
+            errorResponse.setMessage(ex.getMessage());
+            this.logger.error(DATABASE_ERROR, ex);
+            return ResponseEntity.badRequest().body(List.of(errorResponse));
+        }
+
         errorResponse.setMessage(DATABASE_ERROR);
         this.logger.error(DATABASE_ERROR, ex);
 

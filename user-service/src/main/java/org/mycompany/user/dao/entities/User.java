@@ -57,49 +57,49 @@ public class User implements UserDetails {
     }
 
     public UUID getUuid() {
-        return uuid;
+        return this.uuid;
     }
     public void setUuid(UUID uuid) {
         this.uuid = uuid;
     }
     public Instant getCreationTime() {
-        return creationTime;
+        return this.creationTime;
     }
     public void setCreationTime(Instant creationTime) {
         this.creationTime = creationTime;
     }
     public Instant getLastUpdated() {
-        return lastUpdated;
+        return this.lastUpdated;
     }
     public void setLastUpdated(Instant lastUpdated) {
         this.lastUpdated = lastUpdated;
     }
     public String getMail() {
-        return mail;
+        return this.mail;
     }
     public void setMail(String mail) {
         this.mail = mail;
     }
     public String getPassword() {
-        return password;
+        return this.password;
     }
     public void setPassword(String password) {
         this.password = password;
     }
     public String getFullName() {
-        return fullName;
+        return this.fullName;
     }
     public void setFullName(String fullName) {
         this.fullName = fullName;
     }
     public Role getRole() {
-        return role;
+        return this.role;
     }
     public void setRole(Role role) {
         this.role = role;
     }
     public Status getStatus() {
-        return status;
+        return this.status;
     }
     public void setStatus(Status status) {
         this.status = status;

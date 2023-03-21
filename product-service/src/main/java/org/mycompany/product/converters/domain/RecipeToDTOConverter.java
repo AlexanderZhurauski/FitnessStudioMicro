@@ -65,7 +65,7 @@ public class RecipeToDTOConverter implements Converter<Recipe, RecipeDTO> {
                 .map(product -> {
                     RecipeCompositionDTO compositionDTO = new RecipeCompositionDTO();
 
-                    ProductDTO productDTO = productToDTOConverter.convert(product.getProduct());
+                    ProductDTO productDTO = this.productToDTOConverter.convert(product.getProduct());
                     int actualWeight = product.getWeight();
                     int standardWeight = productDTO.getWeight();
                     double ratio = 1.0 * actualWeight / standardWeight;

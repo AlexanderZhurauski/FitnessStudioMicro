@@ -48,7 +48,7 @@ public class Recipe {
     }
 
     public UUID getUuid() {
-        return uuid;
+        return this.uuid;
     }
 
     public void setUuid(UUID uuid) {
@@ -56,7 +56,7 @@ public class Recipe {
     }
 
     public Instant getCreationTime() {
-        return creationTime;
+        return this.creationTime;
     }
 
     public void setCreationTime(Instant creationTime) {
@@ -64,7 +64,7 @@ public class Recipe {
     }
 
     public Instant getLastUpdated() {
-        return lastUpdated;
+        return this.lastUpdated;
     }
 
     public void setLastUpdated(Instant lastUpdated) {
@@ -72,7 +72,7 @@ public class Recipe {
     }
 
     public List<ProductInstance> getComposition() {
-        return composition;
+        return this.composition;
     }
 
     public void setComposition(List<ProductInstance> composition) {
@@ -80,7 +80,7 @@ public class Recipe {
     }
 
     public String getTitle() {
-        return title;
+        return this.title;
     }
 
     public void setTitle(String title) {

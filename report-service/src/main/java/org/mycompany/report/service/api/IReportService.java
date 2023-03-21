@@ -1,6 +1,5 @@
 package org.mycompany.report.service.api;
 
-import org.mycompany.report.core.dto.enums.ReportType;
 import org.mycompany.report.core.dto.report.ReportDTO;
 import org.mycompany.report.core.dto.report.ReportInfoDTO;
 import org.springframework.core.io.InputStreamResource;

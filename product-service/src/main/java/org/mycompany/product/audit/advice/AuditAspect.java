@@ -18,7 +18,7 @@ import java.util.UUID;
 @Aspect
 public class AuditAspect {
 
-    private static final String message = "User '%s' has %s entity '%s'.";
+    private static final String MESSAGE = "User '%s' has %s entity '%s'.";
 
     private final IAuditClient auditClient;
     private final UserHolder userHolder;
@@ -60,7 +60,7 @@ public class AuditAspect {
         auditUser.setUuid(UUID.fromString(userDetails.getUserID()));
         auditUser.setFio(userDetails.getFullName());
         auditData.setUser(auditUser);
-        String auditText = String.format(message, userDetails.getUsername(), operationName, entityType.name());
+        String auditText = String.format(MESSAGE, userDetails.getUsername(), operationName, entityType.name());
         auditData.setText(auditText);
 
         this.auditClient.internalPost(auditData);

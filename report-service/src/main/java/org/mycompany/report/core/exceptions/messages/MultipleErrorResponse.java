@@ -16,7 +16,7 @@ public class MultipleErrorResponse {
     }
 
     public String getLogref() {
-        return logref;
+        return this.logref;
     }
 
     public void setLogref(String logref) {
@@ -24,7 +24,7 @@ public class MultipleErrorResponse {
     }
 
     public List<ErrorField> getErrors() {
-        return errors;
+        return this.errors;
     }
 
     public void setErrors(List<ErrorField> errors) {

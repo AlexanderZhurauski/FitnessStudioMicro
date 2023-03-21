@@ -3,6 +3,8 @@ package org.mycompany.report.security;
 import io.jsonwebtoken.*;
 import org.mycompany.report.security.api.IExtendedUserDetails;
 import org.mycompany.report.security.api.ITokenHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -12,6 +14,7 @@ import java.util.concurrent.TimeUnit;
 public class JwtTokenHandler implements ITokenHandler {
 
     private JWTProperty jwtProperty;
+    private Logger logger = LoggerFactory.getLogger(JwtTokenHandler.class);
     private static final String FULL_NAME = "fio";
     private static final String USER_ID = "uid";
 
@@ -61,15 +64,15 @@ public class JwtTokenHandler implements ITokenHandler {
             Jwts.parser().setSigningKey(this.jwtProperty.getSecret()).parseClaimsJws(token);
             return true;
         } catch (SignatureException ex) {
-            //logger.error("Invalid JWT signature - {}", ex.getMessage());
+            this.logger.error("Invalid JWT signature - {}", ex.getMessage());
         } catch (MalformedJwtException ex) {
-            //logger.error("Invalid JWT token - {}", ex.getMessage());
+            this.logger.error("Invalid JWT token - {}", ex.getMessage());
         } catch (ExpiredJwtException ex) {
-            //logger.error("Expired JWT token - {}", ex.getMessage());
+            this.logger.error("Expired JWT token - {}", ex.getMessage());
         } catch (UnsupportedJwtException ex) {
-            //logger.error("Unsupported JWT token - {}", ex.getMessage());
+            this.logger.error("Unsupported JWT token - {}", ex.getMessage());
         } catch (IllegalArgumentException ex) {
-            //logger.error("JWT claims string is empty - {}", ex.getMessage());
+            this.logger.error("JWT claims string is empty - {}", ex.getMessage());
         }
         return false;
     }

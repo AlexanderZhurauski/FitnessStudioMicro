@@ -136,7 +136,7 @@ public class ReportService implements IReportService {
             XmlParserException, InternalException {
 
         PutObjectArgs uploadConfig = PutObjectArgs.builder()
-                .bucket(minioProperty.getExcelBucket())
+                .bucket(this.minioProperty.getExcelBucket())
                 .object(String.format(EXCEL_FILE, reportUUID.toString()))
                 .stream(excelDoc.getInputStream(), UNKNOWN_SIZE, UNKNOWN_PARTS)
                 .build();

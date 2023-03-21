@@ -43,7 +43,7 @@ public class UserCreateDTO {
     }
 
     public String getMail() {
-        return mail;
+        return this.mail;
     }
 
     public void setMail(String mail) {
@@ -52,7 +52,7 @@ public class UserCreateDTO {
 
     @JsonProperty("fio")
     public String getFullName() {
-        return fullName;
+        return this.fullName;
     }
 
     @JsonProperty("fio")
@@ -61,7 +61,7 @@ public class UserCreateDTO {
     }
 
     public UserRole getRole() {
-        return role;
+        return this.role;
     }
 
     public void setRole(UserRole role) {
@@ -69,7 +69,7 @@ public class UserCreateDTO {
     }
 
     public UserStatus getStatus() {
-        return status;
+        return this.status;
     }
 
     public void setStatus(UserStatus status) {
@@ -77,7 +77,7 @@ public class UserCreateDTO {
     }
 
     public String getPassword() {
-        return password;
+        return this.password;
     }
 
     public void setPassword(String password) {

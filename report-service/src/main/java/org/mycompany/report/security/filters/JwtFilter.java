@@ -42,12 +42,12 @@ public class JwtFilter extends OncePerRequestFilter {
         }
 
         final String token = header.split(" ")[1].trim();
-        if (!tokenHandler.validate(token)) {
+        if (!this.tokenHandler.validate(token)) {
             chain.doFilter(request, response);
             return;
         }
 
-        IExtendedUserDetails userDetails = this.userClient.loadUserByUsername(tokenHandler.getUsername(token));
+        IExtendedUserDetails userDetails = this.userClient.loadUserByUsername(this.tokenHandler.getUsername(token));
 
         UsernamePasswordAuthenticationToken
                 authentication = new UsernamePasswordAuthenticationToken(

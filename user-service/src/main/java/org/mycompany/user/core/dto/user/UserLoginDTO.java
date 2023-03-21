@@ -24,7 +24,7 @@ public class UserLoginDTO {
     }
 
     public String getMail() {
-        return mail;
+        return this.mail;
     }
 
     public void setMail(String mail) {
@@ -32,7 +32,7 @@ public class UserLoginDTO {
     }
 
     public String getPassword() {
-        return password;
+        return this.password;
     }
 
     public void setPassword(String password) {

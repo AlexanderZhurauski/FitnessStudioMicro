@@ -21,7 +21,7 @@ public class ConfirmationToken {
     }
 
     public String getEmail() {
-        return email;
+        return this.email;
     }
 
     public void setEmail(String email) {
@@ -29,7 +29,7 @@ public class ConfirmationToken {
     }
 
     public String getToken() {
-        return token;
+        return this.token;
     }
 
     public void setToken(String token) {

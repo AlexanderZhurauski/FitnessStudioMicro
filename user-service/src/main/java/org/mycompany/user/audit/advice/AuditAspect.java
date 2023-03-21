@@ -19,7 +19,7 @@ import java.util.UUID;
 @Aspect
 public class AuditAspect {
 
-    private static final String message = "User '%s' has %s entity '%s'.";
+    private static final String MESSAGE = "User '%s' has %s entity '%s'.";
     private static final UUID SYSTEM_UUID = UUID.fromString("b3451290-c64f-11ed-afa1-0242ac120002");
 
     private final IAuditClient auditClient;
@@ -63,7 +63,7 @@ public class AuditAspect {
             auditUser.setUuid(SYSTEM_UUID);
             auditUser.setRole(UserRole.ADMIN);
             auditData.setUser(auditUser);
-            String auditText = String.format(message, "SYSTEM", operationName, entityType.name());
+            String auditText = String.format(MESSAGE, "SYSTEM", operationName, entityType.name());
             auditData.setText(auditText);
             this.auditClient.internalPost(auditData);
             return;
@@ -74,7 +74,7 @@ public class AuditAspect {
         auditUser.setUuid(UUID.fromString(userDetails.getUserID()));
         auditUser.setFio(userDetails.getFullName());
         auditData.setUser(auditUser);
-        String auditText = String.format(message, userDetails.getUsername(), operationName, entityType.name());
+        String auditText = String.format(MESSAGE, userDetails.getUsername(), operationName, entityType.name());
         auditData.setText(auditText);
 
         this.auditClient.internalPost(auditData);

@@ -58,16 +58,16 @@ public class EmailService implements IEmailService {
     @Job(name = "Confirmation Link", retries = 3)
     public void sendConfirmationLinkAsync(String address, String token) throws MessagingException {
 
-        MimeMessage confirmationMail = mailSender.createMimeMessage();
+        MimeMessage confirmationMail = this.mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(confirmationMail, true);
 
-        helper.setFrom(mailProperty.getSender());
+        helper.setFrom(this.mailProperty.getSender());
         helper.setTo(address);
-        helper.setSubject(mailProperty.getSubject());
-        String link = String.format(mailProperty.getLink(), token, address);
-        String text = String.format(mailProperty.getText(), link);
+        helper.setSubject(this.mailProperty.getSubject());
+        String link = String.format(this.mailProperty.getLink(), token, address);
+        String text = String.format(this.mailProperty.getText(), link);
         helper.setText(text);
 
-        mailSender.send(confirmationMail);
+        this.mailSender.send(confirmationMail);
     }
 }

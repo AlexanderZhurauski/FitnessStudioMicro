@@ -7,7 +7,6 @@ import org.mycompany.user.core.dto.user.UserDTO;
 import org.mycompany.user.core.dto.user.UserDetailsDTO;
 import org.mycompany.user.core.dto.user.UserLoginDTO;
 import org.mycompany.user.core.dto.user.UserRegistrationDTO;
-import org.mycompany.user.security.api.IExtendedUserDetails;
 import org.mycompany.user.service.api.IUserAuthenticationService;
 import org.mycompany.user.service.api.IUserDataService;
 import org.springframework.http.HttpStatus;

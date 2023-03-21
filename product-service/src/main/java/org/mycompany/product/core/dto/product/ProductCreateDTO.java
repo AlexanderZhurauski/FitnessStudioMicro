@@ -35,7 +35,7 @@ public class ProductCreateDTO {
     }
 
     public String getTitle() {
-        return title;
+        return this.title;
     }
 
     public void setTitle(String title) {
@@ -43,7 +43,7 @@ public class ProductCreateDTO {
     }
 
     public int getWeight() {
-        return weight;
+        return this.weight;
     }
 
     public void setWeight(int weight) {
@@ -51,7 +51,7 @@ public class ProductCreateDTO {
     }
 
     public int getCalories() {
-        return calories;
+        return this.calories;
     }
 
     public void setCalories(int calories) {
@@ -59,7 +59,7 @@ public class ProductCreateDTO {
     }
 
     public double getProteins() {
-        return proteins;
+        return this.proteins;
     }
 
     public void setProteins(double proteins) {
@@ -67,7 +67,7 @@ public class ProductCreateDTO {
     }
 
     public double getFats() {
-        return fats;
+        return this.fats;
     }
 
     public void setFats(double fats) {
@@ -75,7 +75,7 @@ public class ProductCreateDTO {
     }
 
     public double getCarbohydrates() {
-        return carbohydrates;
+        return this.carbohydrates;
     }
 
     public void setCarbohydrates(double carbohydrates) {
