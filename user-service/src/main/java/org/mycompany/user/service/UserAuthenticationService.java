@@ -1,5 +1,8 @@
 package org.mycompany.user.service;
 
+import org.mycompany.user.audit.annotations.Audited;
+import org.mycompany.user.audit.enums.EntityType;
+import org.mycompany.user.audit.enums.OperationType;
 import org.mycompany.user.core.dto.enums.UserStatus;
 import org.mycompany.user.core.dto.user.*;
 import org.mycompany.user.security.JwtTokenHandler;
@@ -53,7 +56,9 @@ public class UserAuthenticationService implements IUserAuthenticationService {
     }
 
     @Override
-    public void verify(String code, String mail) {
+    @Audited(entityType = EntityType.USER, operationType = OperationType.UPDATE)
+    @Transactional
+    public UUID verify(String code, String mail) {
 
         if (!this.mailClient.verifyEmail(code, mail)) {
             throw new BadCredentialsException("The token provided doesn't " +
@@ -65,6 +70,8 @@ public class UserAuthenticationService implements IUserAuthenticationService {
 
         this.userDataService.changeStatus(userID, confirmedUser.getBaseEssence().getLastUpdated(),
                 UserStatus.ACTIVATED);
+
+        return userID;
     }
 
     @Override

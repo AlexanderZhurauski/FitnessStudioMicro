@@ -5,13 +5,14 @@ import org.mycompany.user.core.dto.user.UserDetailsDTO;
 import org.mycompany.user.core.dto.user.UserLoginDTO;
 import org.mycompany.user.core.dto.user.UserRegistrationDTO;
 
+import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 
 public interface IUserAuthenticationService {
 
     void register(UserRegistrationDTO userRegistrationDTO);
-    void verify(String code, String mail) throws ExecutionException, InterruptedException, TimeoutException;
+    UUID verify(String code, String mail) throws ExecutionException, InterruptedException, TimeoutException;
     String login(UserLoginDTO userLoginDTO);
     UserDTO getMyData();
     UserDetailsDTO getInternal(String username);
