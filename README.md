@@ -15,6 +15,7 @@ Fitness Studio is a microservices-based web application for managing a healthy f
 * Nginx proxy
 * Swagger UI
 * MinIO for file storage
+* Apache Kafka
 ## Features
 * User authentication and authorization using JWT tokens
 * CRUD operations for fitness recipes
