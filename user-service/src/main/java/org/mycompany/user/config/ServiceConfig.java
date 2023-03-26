@@ -1,6 +1,7 @@
 package org.mycompany.user.config;
 
 import org.mycompany.user.audit.advice.AuditAspect;
+import org.mycompany.user.core.dto.audit.AuditDTO;
 import org.mycompany.user.core.dto.user.UserCreateDTO;
 import org.mycompany.user.core.dto.user.UserDTO;
 import org.mycompany.user.core.dto.user.UserRegistrationDTO;
@@ -11,11 +12,11 @@ import org.mycompany.user.security.UserHolder;
 import org.mycompany.user.security.api.IExtendedUserDetails;
 import org.mycompany.user.service.*;
 import org.mycompany.user.service.api.*;
-import org.mycompany.user.web.clients.IAuditClient;
 import org.mycompany.user.web.clients.IMailClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -57,7 +58,8 @@ public class ServiceConfig {
     }
 
     @Bean
-    public AuditAspect auditAspect(IAuditClient auditClient, UserHolder userHolder) {
-        return new AuditAspect(auditClient, userHolder);
+    public AuditAspect auditAspect(UserHolder userHolder,
+                                   KafkaTemplate<String, AuditDTO> kafkaTemplate) {
+        return new AuditAspect(userHolder, kafkaTemplate);
     }
 }

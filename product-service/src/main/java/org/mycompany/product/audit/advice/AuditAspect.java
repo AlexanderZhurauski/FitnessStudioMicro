@@ -6,11 +6,12 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.mycompany.product.audit.annotations.Audited;
 import org.mycompany.product.audit.enums.EntityType;
 import org.mycompany.product.audit.enums.OperationType;
+import org.mycompany.product.config.KafkaConfig;
 import org.mycompany.product.core.dto.audit.AuditDTO;
 import org.mycompany.product.core.dto.audit.AuditUserDTO;
 import org.mycompany.product.security.UserHolder;
 import org.mycompany.product.security.api.IExtendedUserDetails;
-import org.mycompany.product.web.clients.IAuditClient;
+import org.springframework.kafka.core.KafkaTemplate;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -20,13 +21,13 @@ public class AuditAspect {
 
     private static final String MESSAGE = "User '%s' has %s entity '%s'.";
 
-    private final IAuditClient auditClient;
     private final UserHolder userHolder;
+    private final KafkaTemplate<String, AuditDTO> kafkaTemplate;
 
-    public AuditAspect(IAuditClient auditClient,
-                       UserHolder userHolder) {
-        this.auditClient = auditClient;
+    public AuditAspect(UserHolder userHolder,
+                       KafkaTemplate<String, AuditDTO> kafkaTemplate) {
         this.userHolder = userHolder;
+        this.kafkaTemplate = kafkaTemplate;
     }
 
     @Pointcut("@annotation(audited)")
@@ -63,6 +64,6 @@ public class AuditAspect {
         String auditText = String.format(MESSAGE, userDetails.getUsername(), operationName, entityType.name());
         auditData.setText(auditText);
 
-        this.auditClient.internalPost(auditData);
+        this.kafkaTemplate.send(KafkaConfig.AUDIT_TOPIC, auditData);
     }
 }

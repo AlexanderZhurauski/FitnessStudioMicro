@@ -78,8 +78,11 @@ services:
       JWT_SECRET: ${JWT_SECRET}
       JWT_ISSUER: ${JWT_ISSUER}
       EUREKA_SERVER_URL: ${EUREKA_SERVER_URL}
+      KAFKA_SERVERS: ${KAFKA_SERVERS}
     depends_on:
       - eureka-server
+      - kafka-broker-1
+      - kafka-broker-2
       - user-db
     networks:
       - fitness_ntwrk
@@ -94,8 +97,11 @@ services:
       JWT_SECRET: ${JWT_SECRET}
       JWT_ISSUER: ${JWT_ISSUER}
       EUREKA_SERVER_URL: ${EUREKA_SERVER_URL}
+      KAFKA_SERVERS: ${KAFKA_SERVERS}
     depends_on:
       - eureka-server
+      - kafka-broker-1
+      - kafka-broker-2
       - product-db
     networks:
       - fitness_ntwrk
@@ -127,8 +133,11 @@ services:
       JWT_SECRET: ${JWT_SECRET}
       JWT_ISSUER: ${JWT_ISSUER}
       EUREKA_SERVER_URL: ${EUREKA_SERVER_URL}
+      KAFKA_SERVERS: ${KAFKA_SERVERS}
     depends_on:
       - eureka-server
+      - kafka-broker-1
+      - kafka-broker-2
       - audit-db
     networks:
       - fitness_ntwrk
@@ -147,8 +156,11 @@ services:
       MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
       MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
       MINIO_EXCEL_BUCKET: ${MINIO_EXCEL_BUCKET}
+      KAFKA_SERVERS: ${KAFKA_SERVERS}
     depends_on:
       - eureka-server
+      - kafka-broker-1
+      - kafka-broker-2
       - report-db
       - minio
     networks:
@@ -176,6 +188,68 @@ services:
     volumes:
       - ./data:/data
     command: server /data --console-address :9001
+    networks:
+      - fitness_ntwrk
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    hostname: zookeeper
+    container_name: zookeeper
+    ports:
+      - "2181:2181"
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    networks:
+      - fitness_ntwrk
+      
+  kafka-broker-1:
+    image: confluentinc/cp-enterprise-kafka:latest
+    hostname: kafka-broker-1
+    container_name: kafka-broker-1
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+      - "29092:29092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-broker-1:9092,PLAINTEXT_HOST://localhost:29092
+      KAFKA_METRIC_REPORTERS: io.confluent.metrics.reporter.ConfluentMetricsReporter
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      CONFLUENT_METRICS_REPORTER_BOOTSTRAP_SERVERS: kafka-broker-1:9092
+      CONFLUENT_METRICS_REPORTER_ZOOKEEPER_CONNECT: zookeeper:2181
+      CONFLUENT_METRICS_REPORTER_TOPIC_REPLICAS: 1
+      CONFLUENT_METRICS_ENABLE: 'true'
+      CONFLUENT_SUPPORT_CUSTOMER_ID: 'anonymous'
+    networks:
+      - fitness_ntwrk
+
+  kafka-broker-2:
+    image: confluentinc/cp-enterprise-kafka:latest
+    hostname: kafka-broker-2
+    container_name: kafka-broker-2
+    depends_on:
+      - zookeeper
+    ports:
+      - "9093:9093"
+      - "29093:29093"
+    environment:
+      KAFKA_BROKER_ID: 2
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-broker-2:9093,PLAINTEXT_HOST://localhost:29093
+      KAFKA_METRIC_REPORTERS: io.confluent.metrics.reporter.ConfluentMetricsReporter
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      CONFLUENT_METRICS_REPORTER_BOOTSTRAP_SERVERS: kafka-broker-2:9093
+      CONFLUENT_METRICS_REPORTER_ZOOKEEPER_CONNECT: zookeeper:2181
+      CONFLUENT_METRICS_REPORTER_TOPIC_REPLICAS: 1
+      CONFLUENT_METRICS_ENABLE: 'true'
+      CONFLUENT_SUPPORT_CUSTOMER_ID: 'anonymous'
     networks:
       - fitness_ntwrk
 

@@ -1,9 +1,11 @@
 package org.mycompany.audit.config;
 
 import org.mycompany.audit.converters.json.StringToInstantConverter;
+import org.mycompany.audit.service.api.IAuditService;
 import org.mycompany.audit.web.clients.IUserClient;
 import org.mycompany.audit.security.JwtTokenHandler;
 import org.mycompany.audit.security.filters.JwtFilter;
+import org.mycompany.audit.web.listeners.AuditKafkaListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
@@ -20,5 +22,8 @@ public class WebConfigurer implements WebMvcConfigurer {
     public JwtFilter jwtFilter(IUserClient userClient, JwtTokenHandler tokenUtil) {
         return new JwtFilter(userClient, tokenUtil);
     }
-
+    @Bean
+    public AuditKafkaListener kafkaListener(IAuditService auditService) {
+        return new AuditKafkaListener(auditService);
+    }
 }

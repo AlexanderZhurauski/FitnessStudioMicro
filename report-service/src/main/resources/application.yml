@@ -10,8 +10,16 @@ spring:
     properties:
       hibernate:
         format_sql: true
+
   application:
     name: report-service
+
+  kafka:
+    producer:
+      bootstrap-servers: ${KAFKA_SERVERS}
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+    bootstrap-servers: ${KAFKA_SERVERS}
 
 eureka:
   instance:

@@ -6,12 +6,13 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.mycompany.user.audit.annotations.Audited;
 import org.mycompany.user.audit.enums.EntityType;
 import org.mycompany.user.audit.enums.OperationType;
+import org.mycompany.user.config.KafkaConfig;
 import org.mycompany.user.core.dto.audit.AuditDTO;
 import org.mycompany.user.core.dto.audit.AuditUserDTO;
 import org.mycompany.user.core.dto.enums.UserRole;
 import org.mycompany.user.security.UserHolder;
 import org.mycompany.user.security.api.IExtendedUserDetails;
-import org.mycompany.user.web.clients.IAuditClient;
+import org.springframework.kafka.core.KafkaTemplate;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -22,13 +23,13 @@ public class AuditAspect {
     private static final String MESSAGE = "User '%s' has %s entity '%s'.";
     private static final UUID SYSTEM_UUID = UUID.fromString("b3451290-c64f-11ed-afa1-0242ac120002");
 
-    private final IAuditClient auditClient;
     private final UserHolder userHolder;
+    private final KafkaTemplate<String, AuditDTO> kafkaTemplate;
 
-    public AuditAspect(IAuditClient auditClient,
-                       UserHolder userHolder) {
-        this.auditClient = auditClient;
+    public AuditAspect(UserHolder userHolder,
+                       KafkaTemplate<String, AuditDTO> kafkaTemplate) {
         this.userHolder = userHolder;
+        this.kafkaTemplate = kafkaTemplate;
     }
 
     @Pointcut("@annotation(audited)")
@@ -65,7 +66,7 @@ public class AuditAspect {
             auditData.setUser(auditUser);
             String auditText = String.format(MESSAGE, "SYSTEM", operationName, entityType.name());
             auditData.setText(auditText);
-            this.auditClient.internalPost(auditData);
+            this.kafkaTemplate.send(KafkaConfig.AUDIT_TOPIC, auditData);
             return;
         }
         IExtendedUserDetails userDetails = (IExtendedUserDetails) tokenData;
@@ -77,6 +78,6 @@ public class AuditAspect {
         String auditText = String.format(MESSAGE, userDetails.getUsername(), operationName, entityType.name());
         auditData.setText(auditText);
 
-        this.auditClient.internalPost(auditData);
+        this.kafkaTemplate.send(KafkaConfig.AUDIT_TOPIC, auditData);
     }
 }
